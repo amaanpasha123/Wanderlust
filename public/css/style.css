@@ -1,0 +1,141 @@
+body{
+    font-family: "Plus Jakarta Sans", sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+.container{
+    flex: 1;
+}
+
+/* Custom navbar styles */
+.custom-navbar {
+    background-color: #f8f9fa; /* Light background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds slight shadow for depth */
+}
+
+.navbar{
+    background-color: whitesmoke;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #5A5A5A; /* Custom color for branding */
+}
+
+.navbar-brand i {
+    margin-right: 10px;
+    color: #FF6347; /* A vibrant color for the icon */
+}
+
+.nav-link {
+    font-size: 1rem;
+    margin-right: 15px;
+    color: #5A5A5A; /* Adjust color of the nav links */
+}
+
+.nav-link:hover {
+    color: #FF6347; /* Change color on hover */
+    transition: color 0.3s;
+}
+
+.navbar-toggler {
+    border: none; /* Removes border around the button */
+}
+
+.navbar-toggler-icon {
+    background-image: url('data:image/svg+xml;base64,...'); /* Custom icon if desired */
+}
+
+.navbar .nav-link.active {
+    color: #FF6347; /* Highlight active link */
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .custom-navbar {
+        padding: 10px;
+    }
+}
+
+
+
+
+
+footer {
+    background-color: black; /* Dark background for the footer */
+    color: #fff; /* White text color */
+    padding: 1.5rem 0; /* Padding for spacing */
+    font-family: 'Arial', sans-serif; /* Choose a modern, clean font */
+}
+
+.f-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Spread out elements evenly */
+    align-items: center; /* Center align vertically */
+    max-width: 1200px; /* Restrict footer width */
+    margin: 0 auto; /* Center align the footer content */
+    padding: 0 1rem; /* Add some horizontal padding */
+}
+
+.f-info-socials i {
+     /* White icon color */
+    margin: 0 10px; /* Spacing between icons */
+    font-size: 2rem; /* Increase icon size */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.f-info-socials i:hover {
+    color: #f39c12; /* Change color on hover */
+}
+
+.f-info-links a {
+    color: #fff; /* White text color for links */
+    margin: 0 10px; /* Spacing between links */
+    text-decoration: none; /* Remove underline */
+    font-size: 1rem; /* Link font size */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.f-info-links a:hover {
+    text-decoration: underline; /* Remove underline */
+}
+
+/* Cards */
+.card{
+    border: none !important;
+}
+
+.card-img-top{
+    border-radius: 5px;
+    width: 100%;
+    object-fit: cover !important;
+    font-weight: 400 !important;
+}
+
+.card-text p{
+    font-weight: 400 !important;
+}
+
+
+
+.add-btn{
+    background-color:  #FF6347;
+    border: none;
+}
+
+
+.edit-btn{
+    background-color:  #FF6347;
+    border: none;
+}
+
+/* show page */
+
+.show-img{
+    height: 30vh;
+}
