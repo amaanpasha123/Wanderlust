@@ -7,8 +7,8 @@ const Review = require("./models/review");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const wrapAsync = require("./utils/wrapAsync"); // Corrected the import name
-const ExpressError = require("./utils/ExpressError"); // Corrected filename
+const wrapAsync = require("./utils/wrapAsyc"); // Corrected the import name
+const ExpressError = require("./utils/ExpressErrors"); // Corrected filename
 const { listingSchema, reviewSchema } = require("./schema.js");
 
 // EJS engine setup
@@ -21,12 +21,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-// Mongoose connection
 mongoose
-  .connect("mongodb://127.0.0.1:27017/WonderLust", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect("mongodb://127.0.0.1:27017/WonderLust") // Removed options
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -34,23 +30,26 @@ mongoose
     console.error("Failed to connect to MongoDB", err);
   });
 
+
 // Validation middleware
 const validateListing = (req, res, next) => {
   const { error } = listingSchema.validate(req.body);
   if (error) {
     const errorMessage = error.details.map((el) => el.message).join(", ");
-    return next(new ExpressError(400, errorMessage));
+    throw new ExpressError(400, errorMessage);
+  } else {
+    next();
   }
-  next();
 };
 
 const validateReview = (req, res, next) => {
   const { error } = reviewSchema.validate(req.body);
   if (error) {
     const errorMessage = error.details.map((el) => el.message).join(", ");
-    return next(new ExpressError(400, errorMessage));
+    throw new ExpressError(400, errorMessage);
+  } else {
+    next();
   }
-  next();
 };
 
 // Routes
@@ -75,16 +74,20 @@ app.get("/listings/new", (req, res) => {
 });
 
 // Show Listing with Reviews
-app.get(
-  "/listings/:id",
-  wrapAsync(async (req, res) => {
-    const listing = await Listing.findById(req.params.id).populate("reviews").exec();
-    if (!listing) {
-      throw new ExpressError(404, "Listing not found");
-    }
-    res.render("listings/show", { listing });
-  })
-);
+app.get('/listings/:id', async (req, res) => {
+  try {
+      const listing = await Listing.findById(req.params.id).populate('review').exec();
+      if (!listing) {
+          req.flash('error', 'Listing not found!');
+          return res.redirect('/listings');
+      }
+      res.render('listings/show', { listing });
+  } catch (err) {
+      console.error(err);
+      req.flash('error', 'Something went wrong.');
+      res.redirect('/listings');
+  }
+});
 
 // Create New Listing
 app.post(
