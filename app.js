@@ -2,17 +2,16 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const Listing = require("../Major/models/listing"); // Ensure this path is correct
+const Listing = require("./models/listing");
+const Review = require("./models/review");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const wrapsync = require("../Major/utils/wrapAsyc");
-const ExpressError = require("../Major/utils/ExpressErrors");
-const {listingSchema} = require("../Major/schema.js");
-const ReviewsModel = require("../Major/models/review");
-const review = require("../Major/models/review");
+const wrapAsync = require("./utils/wrapAsync"); // Corrected the import name
+const ExpressError = require("./utils/ExpressError"); // Corrected filename
+const { listingSchema, reviewSchema } = require("./schema.js");
 
-// Set up EJS engine with ejs-mate
+// EJS engine setup
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -21,144 +20,149 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-// Ensure 'public' directory contains your CSS file
 
- // Serve static files from 'public'
 // Mongoose connection
-main().then(() => {
-  console.log("Connected to DB");
-}).catch(err => {
-  console.log("There is an error", err);
-});
+mongoose
+  .connect("mongodb://127.0.0.1:27017/WonderLust", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB", err);
+  });
 
-async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/WonderLust");
-}
+// Validation middleware
+const validateListing = (req, res, next) => {
+  const { error } = listingSchema.validate(req.body);
+  if (error) {
+    const errorMessage = error.details.map((el) => el.message).join(", ");
+    return next(new ExpressError(400, errorMessage));
+  }
+  next();
+};
 
-// Server setup
-app.listen(8080, () => {
-  console.log("Server is listening on port 8080");
-});
+const validateReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
+  if (error) {
+    const errorMessage = error.details.map((el) => el.message).join(", ");
+    return next(new ExpressError(400, errorMessage));
+  }
+  next();
+};
 
 // Routes
-// Index Route - List all listings
-app.get('/listings', wrapsync(async (req, res) => {
-  try {
-    const allListings = await Listing.find({}); // Assuming Listing is your Mongoose model
-    res.render('listings/index', { allListings }); // Pass listings to view
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  }
-}));
 
-// New Listing Route
+// Home Page - Redirect to Listings
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
+
+// Index Route - List all listings
+app.get(
+  "/listings",
+  wrapAsync(async (req, res) => {
+    const allListings = await Listing.find({});
+    res.render("listings/index", { allListings });
+  })
+);
+
+// New Listing Form
 app.get("/listings/new", (req, res) => {
   res.render("listings/new");
 });
 
-// Show Listing Route
-app.get("/listings/:id", wrapsync(async (req, res) => {
-  try {
-    const listing = await Listing.findById(req.params.id);
+// Show Listing with Reviews
+app.get(
+  "/listings/:id",
+  wrapAsync(async (req, res) => {
+    const listing = await Listing.findById(req.params.id).populate("reviews").exec();
     if (!listing) {
-      return res.status(404).send('Listing not found');
+      throw new ExpressError(404, "Listing not found");
     }
     res.render("listings/show", { listing });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  }
-}));
+  })
+);
 
-// Create New Listing Route
-app.post("/listings", wrapsync(async (req, res, next) => {
-  let result = listingSchema.validate(req.body);
-  console.log(result);
-  const newListing = new Listing(req.body.listing);
-  await newListing.save();
-  res.redirect("/listings");
-}));
+// Create New Listing
+app.post(
+  "/listings",
+  validateListing,
+  wrapAsync(async (req, res) => {
+    const newListing = new Listing(req.body.listing);
+    await newListing.save();
+    res.redirect(`/listings/${newListing._id}`);
+  })
+);
 
-
-
-// Edit Listing Route
-app.get("/listings/:id/edit", wrapsync(async (req, res) => {
-  try {
+// Edit Listing Form
+app.get(
+  "/listings/:id/edit",
+  wrapAsync(async (req, res) => {
     const listing = await Listing.findById(req.params.id);
     if (!listing) {
-      return res.status(404).send('Listing not found');
+      throw new ExpressError(404, "Listing not found");
     }
     res.render("listings/edit", { listing });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  }
-}));
+  })
+);
 
-// Update Listing Route
-app.put("/listings/:id",wrapsync(async (req, res) => {
-  try {
-    const updatedListing = await Listing.findByIdAndUpdate(req.params.id, req.body.listing, { new: true });
-    res.redirect(`/listings/${req.params.id}`);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error updating listing');
-  }
-}));
-
-// Delete Listing Route
-app.delete("/listings/:id", wrapsync(async (req, res) => {
-  try {
-    await Listing.findByIdAndDelete(req.params.id);
-    res.redirect("/listings");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error deleting listing');
-  }
-}));
-
-
-//Reviews Post Route......
-app.post("/listing/:id/reviews",async (req, res) => {
-  let listings =  await Listing.findById(req.param.id);
-  let newlisting = new review(req.body.review);
-
-  listing.review.push(newlisting);
-
-  await newlisting.save();
-  await listing.save();
-  console.log("new review saved");
-  res.send("this new review is saved");
-});
-
-
-
-app.get("/listings/:id", wrapsync(async (req, res) => {
-  try {
-    const listing = await Listing.findById(req.params.id).populate('reviews');
-    if (!listing) {
-      return res.status(404).send('Listing not found');
+// Update Listing
+app.put(
+  "/listings/:id",
+  validateListing,
+  wrapAsync(async (req, res) => {
+    const updatedListing = await Listing.findByIdAndUpdate(
+      req.params.id,
+      req.body.listing,
+      { new: true, runValidators: true }
+    );
+    if (!updatedListing) {
+      throw new ExpressError(404, "Listing not found");
     }
-    res.render("listings/show", { listing });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  }
-}));
+    res.redirect(`/listings/${req.params.id}`);
+  })
+);
 
+// Delete Listing
+app.delete(
+  "/listings/:id",
+  wrapAsync(async (req, res) => {
+    const deletedListing = await Listing.findByIdAndDelete(req.params.id);
+    if (!deletedListing) {
+      throw new ExpressError(404, "Listing not found");
+    }
+    res.redirect("/listings");
+  })
+);
 
-// Home Route
-app.get("/", (req, res) => {
-  res.send("We are listening very well, don't worry!");
+// Create Review
+app.post(
+  "/listings/:id/reviews",
+  validateReview,
+  wrapAsync(async (req, res) => {
+    const listing = await Listing.findById(req.params.id);
+    if (!listing) {
+      throw new ExpressError(404, "Listing not found");
+    }
+    const newReview = new Review(req.body.review);
+    listing.reviews.push(newReview);
+    await newReview.save();
+    await listing.save();
+    res.redirect(`/listings/${listing._id}`);
+  })
+);
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message = "Something went wrong!" } = err;
+  console.error(err);
+  res.status(statusCode).render("error", { message, statusCode });
 });
 
-app.all("*",(req, res, next)=>{
-    next(new ExpressError (404,"Page not found"));
-});
-
-app.use((err, req, res, next)=>{
-  let {statuscode=500 , message="something went wrong !!!!!"} = err;
-  res.render("error.ejs",{message:"Something went wrong!!!"});
-  // res.send(statuscode).send(message);
+// Start Server
+app.listen(8080, () => {
+  console.log("Server is running on port 8080");
 });
