@@ -74,20 +74,44 @@ app.get("/listings/new", (req, res) => {
 });
 
 // Show Listing with Reviews
-app.get('/listings/:id', async (req, res) => {
-  try {
-      const listing = await Listing.findById(req.params.id).populate('review').exec();
-      if (!listing) {
-          req.flash('error', 'Listing not found!');
-          return res.redirect('/listings');
-      }
-      res.render('listings/show', { listing });
-  } catch (err) {
-      console.error(err);
-      req.flash('error', 'Something went wrong.');
-      res.redirect('/listings');
+// app.get('/listings/:id', async (req, res) => {
+//   try {
+//       const listing = await Listing.findById(req.params.id).populate('review').exec();
+//       if (!listing) {
+//           req.flash('error', 'Listing not found!');
+//           return res.redirect('/listings');
+//       }
+//       res.render('listings/show', { listing });
+//   } catch (err) {
+//       console.error(err);
+//       req.flash('error', 'Something went wrong.');
+//       res.redirect('/listings');
+//   }
+// });
+
+app.get("/listings/:id", wrapAsync(async (req, res) => {
+  let {id} = req.params;
+  const listing = await Listing.findById(id).populate("reviews"); 
+  res.render("listings/show", { listing });
+}));
+
+//deleting the review....
+app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req, res) => {
+  const { id, reviewId } = req.params;
+  const listing = await Listing.findById(id);
+  if (!listing) {
+    throw new ExpressError(404, "Listing not found");
   }
-});
+  const review = await Review.findById(reviewId);
+  if (!review) {
+    throw new ExpressError(404, "Review not found");
+  }
+  await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+  await Review.findByIdAndDelete(reviewId);
+  res.redirect(`/listings/${id}`);
+}));
+
+
 
 // Create New Listing
 app.post(
