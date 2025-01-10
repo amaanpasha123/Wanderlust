@@ -2,17 +2,21 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const Listing = require("./models/listing");
-const Review = require("./models/review");
+const Listing = require("./models/listing.js");
+const Review = require("./models/review.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsyc.js"); // Corrected the import name// Corrected the import name
-const ExpressError = require("./utils/ExpressErrors"); // Corrected filename
+const ExpressError = require("./utils/ExpressErrors.js"); // Corrected filename
 const { listingSchema, reviewSchema } = require("./schema.js");
 //routers
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/reviews.js");
+//session for some small task 
+const sessions = require("express-session");
+const flash = require("connect-flash");//for the purpose of flash messages.....
+
 
 
 // EJS engine setup
@@ -25,6 +29,33 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
+
+
+
+const sessionOptions = {
+  secret:"mysecretcode",
+  resave:false,
+  saveUninitialized:true,
+  cookie:{
+    expires: Date.now() + 7 * 24 * 60 * 60 * 100,
+    maxage: 7 * 24 * 60 * 60 * 100,
+    httpOnly: true
+  },
+};
+
+app.use(sessions(sessionOptions));
+app.use(flash());
+
+app.use((req, res, next)=>{
+  res.locals.successmsg = req.flash("success");
+  
+});
+
+//usage of routers......
+app.use("/listings",listings);
+app.use("/listings",reviews);
+
+
 mongoose
   .connect("mongodb://127.0.0.1:27017/WonderLust") // Removed options
   .then(() => {
@@ -35,32 +66,7 @@ mongoose
   });
 
 
-// Validation middleware
-const validateListing = (req, res, next) => {
-  const { error } = listingSchema.validate(req.body);
-  if (error) {
-    const errorMessage = error.details.map((el) => el.message).join(", ");
-    throw new ExpressError(400, errorMessage);
-  } else {
-    next();
-  }
-};
 
-const validateReview = (req, res, next) => {
-  const { error } = reviewSchema.validate(req.body);
-  if (error) {
-    const errorMessage = error.details.map((el) => el.message).join(", ");
-    throw new ExpressError(400, errorMessage);
-  } else {
-    next();
-  }
-};
-
-//usage of routers......
-
-app.use("/listings",listings);
-
-app.use("/listings", reviews);
 
 // Home Page - Redirect to Listings
 app.get("/", (req, res) => {
@@ -85,4 +91,5 @@ app.use((err, req, res, next) => {
 app.listen(8080, () => {
   console.log("Server is running on port 8080");
 });
+
 

@@ -7,9 +7,9 @@ var app = express();
 
 var mongoose = require("mongoose");
 
-var Listing = require("./models/listing");
+var Listing = require("./models/listing.js");
 
-var Review = require("./models/review");
+var Review = require("./models/review.js");
 
 var path = require("path");
 
@@ -20,7 +20,7 @@ var ejsMate = require("ejs-mate");
 var wrapAsync = require("./utils/wrapAsyc.js"); // Corrected the import name// Corrected the import name
 
 
-var ExpressError = require("./utils/ExpressErrors"); // Corrected filename
+var ExpressError = require("./utils/ExpressErrors.js"); // Corrected filename
 
 
 var _require = require("./schema.js"),
@@ -30,7 +30,13 @@ var _require = require("./schema.js"),
 
 var listings = require("./routes/listing.js");
 
-var reviews = require("./routes/reviews.js"); // EJS engine setup
+var reviews = require("./routes/reviews.js"); //session for some small task 
+
+
+var sessions = require("express-session");
+
+var flash = require("connect-flash"); //for the purpose of flash messages.....
+// EJS engine setup
 
 
 app.engine("ejs", ejsMate);
@@ -42,44 +48,30 @@ app.use(express.urlencoded({
   extended: true
 }));
 app.use(methodOverride("_method"));
+var sessionOptions = {
+  secret: "mysecretcode",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 100,
+    maxage: 7 * 24 * 60 * 60 * 100,
+    httpOnly: true
+  }
+};
+app.use(sessions(sessionOptions));
+app.use(flash());
+app.use(function (req, res, next) {
+  res.locals.successmsg = req.flash("success");
+}); //usage of routers......
+
+app.use("/listings", listings);
+app.use("/listings", reviews);
 mongoose.connect("mongodb://127.0.0.1:27017/WonderLust") // Removed options
 .then(function () {
   console.log("Connected to MongoDB");
 })["catch"](function (err) {
   console.error("Failed to connect to MongoDB", err);
-}); // Validation middleware
-
-var validateListing = function validateListing(req, res, next) {
-  var _listingSchema$valida = listingSchema.validate(req.body),
-      error = _listingSchema$valida.error;
-
-  if (error) {
-    var errorMessage = error.details.map(function (el) {
-      return el.message;
-    }).join(", ");
-    throw new ExpressError(400, errorMessage);
-  } else {
-    next();
-  }
-};
-
-var validateReview = function validateReview(req, res, next) {
-  var _reviewSchema$validat = reviewSchema.validate(req.body),
-      error = _reviewSchema$validat.error;
-
-  if (error) {
-    var errorMessage = error.details.map(function (el) {
-      return el.message;
-    }).join(", ");
-    throw new ExpressError(400, errorMessage);
-  } else {
-    next();
-  }
-}; //usage of routers......
-
-
-app.use("/listings", listings);
-app.use("/listings", reviews); // Home Page - Redirect to Listings
+}); // Home Page - Redirect to Listings
 
 app.get("/", function (req, res) {
   res.redirect("/listings");

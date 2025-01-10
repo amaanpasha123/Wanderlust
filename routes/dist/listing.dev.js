@@ -68,9 +68,10 @@ router.post("/", validateListing, wrapAsync(function _callee2(req, res) {
           return regeneratorRuntime.awrap(newListing.save());
 
         case 3:
+          res.flash("success", "Congratulations you created a new listings");
           res.redirect("/listings/".concat(newListing._id));
 
-        case 4:
+        case 5:
         case "end":
           return _context2.stop();
       }
