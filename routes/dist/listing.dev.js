@@ -55,21 +55,24 @@ router.get("/", wrapAsync(function _callee(req, res) {
 
 router.get("/new", function (req, res) {
   res.render("listings/new");
-}); // Create New Listing
+}); // Show route
 
-router.post("/", validateListing, wrapAsync(function _callee2(req, res) {
-  var newListing;
+router.get("/:id", wrapAsync(function _callee2(req, res) {
+  var id, listing;
   return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          newListing = new Listing(req.body.listing);
+          id = req.params.id;
           _context2.next = 3;
-          return regeneratorRuntime.awrap(newListing.save());
+          return regeneratorRuntime.awrap(Listing.findById(id).populate("reviews"));
 
         case 3:
-          res.flash("success", "Congratulations you created a new listings");
-          res.redirect("/listings/".concat(newListing._id));
+          listing = _context2.sent;
+          res.render("./listings/show.ejs", {
+            listing: listing,
+            id: id
+          });
 
         case 5:
         case "end":
@@ -77,22 +80,44 @@ router.post("/", validateListing, wrapAsync(function _callee2(req, res) {
       }
     }
   });
-})); // Edit Listing Form
+})); // Create New Listing
 
-router.get("/:id/edit", wrapAsync(function _callee3(req, res) {
-  var listing;
+router.post("/", validateListing, wrapAsync(function _callee3(req, res) {
+  var newListing;
   return regeneratorRuntime.async(function _callee3$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
-          _context3.next = 2;
+          newListing = new Listing(req.body.listing);
+          _context3.next = 3;
+          return regeneratorRuntime.awrap(newListing.save());
+
+        case 3:
+          req.flash("success", "Congratulations you created a new listings");
+          res.redirect("/listings");
+
+        case 5:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  });
+})); // Edit Listing Form
+
+router.get("/:id/edit", wrapAsync(function _callee4(req, res) {
+  var listing;
+  return regeneratorRuntime.async(function _callee4$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.next = 2;
           return regeneratorRuntime.awrap(Listing.findById(req.params.id));
 
         case 2:
-          listing = _context3.sent;
+          listing = _context4.sent;
 
           if (listing) {
-            _context3.next = 5;
+            _context4.next = 5;
             break;
           }
 
@@ -105,29 +130,29 @@ router.get("/:id/edit", wrapAsync(function _callee3(req, res) {
 
         case 6:
         case "end":
-          return _context3.stop();
+          return _context4.stop();
       }
     }
   });
 })); // Update Listing
 
-router.put("/:id", validateListing, wrapAsync(function _callee4(req, res) {
+router.put("/:id", validateListing, wrapAsync(function _callee5(req, res) {
   var updatedListing;
-  return regeneratorRuntime.async(function _callee4$(_context4) {
+  return regeneratorRuntime.async(function _callee5$(_context5) {
     while (1) {
-      switch (_context4.prev = _context4.next) {
+      switch (_context5.prev = _context5.next) {
         case 0:
-          _context4.next = 2;
+          _context5.next = 2;
           return regeneratorRuntime.awrap(Listing.findByIdAndUpdate(req.params.id, req.body.listing, {
             "new": true,
             runValidators: true
           }));
 
         case 2:
-          updatedListing = _context4.sent;
+          updatedListing = _context5.sent;
 
           if (updatedListing) {
-            _context4.next = 5;
+            _context5.next = 5;
             break;
           }
 
@@ -138,26 +163,26 @@ router.put("/:id", validateListing, wrapAsync(function _callee4(req, res) {
 
         case 6:
         case "end":
-          return _context4.stop();
+          return _context5.stop();
       }
     }
   });
 })); // Delete Listing
 
-router["delete"]("/:id", wrapAsync(function _callee5(req, res) {
+router["delete"]("/:id", wrapAsync(function _callee6(req, res) {
   var deletedListing;
-  return regeneratorRuntime.async(function _callee5$(_context5) {
+  return regeneratorRuntime.async(function _callee6$(_context6) {
     while (1) {
-      switch (_context5.prev = _context5.next) {
+      switch (_context6.prev = _context6.next) {
         case 0:
-          _context5.next = 2;
+          _context6.next = 2;
           return regeneratorRuntime.awrap(Listing.findByIdAndDelete(req.params.id));
 
         case 2:
-          deletedListing = _context5.sent;
+          deletedListing = _context6.sent;
 
           if (deletedListing) {
-            _context5.next = 5;
+            _context6.next = 5;
             break;
           }
 
@@ -168,7 +193,7 @@ router["delete"]("/:id", wrapAsync(function _callee5(req, res) {
 
         case 6:
         case "end":
-          return _context5.stop();
+          return _context6.stop();
       }
     }
   });

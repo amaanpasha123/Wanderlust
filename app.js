@@ -31,29 +31,32 @@ app.use(methodOverride("_method"));
 
 
 
-
 const sessionOptions = {
-  secret:"mysecretcode",
-  resave:false,
-  saveUninitialized:true,
-  cookie:{
-    expires: Date.now() + 7 * 24 * 60 * 60 * 100,
-    maxage: 7 * 24 * 60 * 60 * 100,
-    httpOnly: true
-  },
+  secret: "mysecretcode", // Replace this with an environment variable in production
+  resave: false,
+  saveUninitialized: true,
+  // cookie: {
+  //   maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie lifetime: 7 days in milliseconds
+  //   httpOnly: true, // Helps prevent XSS attacks
+  // },
 };
+
 
 app.use(sessions(sessionOptions));
 app.use(flash());
 
-app.use((req, res, next)=>{
+app.use((req, res, next) => {
   res.locals.successmsg = req.flash("success");
-  
+  // res.locals.error = req.flash("error");
+  console.log(res.locals.successmsg);
+  next();
 });
+
 
 //usage of routers......
 app.use("/listings",listings);
-app.use("/listings",reviews);
+app.use("/listings/:id/reviews",reviews);
+
 
 
 mongoose
@@ -91,5 +94,3 @@ app.use((err, req, res, next) => {
 app.listen(8080, () => {
   console.log("Server is running on port 8080");
 });
-
-

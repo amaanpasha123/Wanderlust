@@ -50,22 +50,25 @@ app.use(express.urlencoded({
 app.use(methodOverride("_method"));
 var sessionOptions = {
   secret: "mysecretcode",
+  // Replace this with an environment variable in production
   resave: false,
-  saveUninitialized: true,
-  cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 100,
-    maxage: 7 * 24 * 60 * 60 * 100,
-    httpOnly: true
-  }
+  saveUninitialized: true // cookie: {
+  //   maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie lifetime: 7 days in milliseconds
+  //   httpOnly: true, // Helps prevent XSS attacks
+  // },
+
 };
 app.use(sessions(sessionOptions));
 app.use(flash());
 app.use(function (req, res, next) {
-  res.locals.successmsg = req.flash("success");
+  res.locals.successmsg = req.flash("success"); // res.locals.error = req.flash("error");
+
+  console.log(res.locals.successmsg);
+  next();
 }); //usage of routers......
 
 app.use("/listings", listings);
-app.use("/listings", reviews);
+app.use("/listings/:id/reviews", reviews);
 mongoose.connect("mongodb://127.0.0.1:27017/WonderLust") // Removed options
 .then(function () {
   console.log("Connected to MongoDB");

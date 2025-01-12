@@ -2,7 +2,9 @@
 
 var express = require("express");
 
-var router = express.Router(); // Fixed: Add parentheses to invoke Router
+var router = express.Router({
+  mergeParams: true
+}); // Fixed: Add parentheses to invoke Router
 
 var wrapAsync = require("../utils/wrapAsyc.js");
 
@@ -31,7 +33,7 @@ var validateReview = function validateReview(req, res, next) {
 }; //deleting the review....
 
 
-router["delete"]("/:id/reviews/:reviewId", wrapAsync(function _callee(req, res) {
+router["delete"]("/:reviewId", wrapAsync(function _callee(req, res) {
   var _req$params, id, reviewId, listing, review;
 
   return regeneratorRuntime.async(function _callee$(_context) {
@@ -89,39 +91,40 @@ router["delete"]("/:id/reviews/:reviewId", wrapAsync(function _callee(req, res) 
   });
 })); // Create Review
 
-router.post("/:id/reviews", validateReview, wrapAsync(function _callee2(req, res) {
+router.post("/", validateReview, wrapAsync(function _callee2(req, res) {
   var listing, newReview;
   return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          _context2.next = 2;
+          console.log(req.params.id);
+          _context2.next = 3;
           return regeneratorRuntime.awrap(Listing.findById(req.params.id));
 
-        case 2:
+        case 3:
           listing = _context2.sent;
 
           if (listing) {
-            _context2.next = 5;
+            _context2.next = 6;
             break;
           }
 
           throw new ExpressError(404, "Listing not found");
 
-        case 5:
+        case 6:
           newReview = new Review(req.body.review);
           listing.reviews.push(newReview);
-          _context2.next = 9;
+          _context2.next = 10;
           return regeneratorRuntime.awrap(newReview.save());
 
-        case 9:
-          _context2.next = 11;
+        case 10:
+          _context2.next = 12;
           return regeneratorRuntime.awrap(listing.save());
 
-        case 11:
+        case 12:
           res.redirect("/listings/".concat(listing._id));
 
-        case 12:
+        case 13:
         case "end":
           return _context2.stop();
       }

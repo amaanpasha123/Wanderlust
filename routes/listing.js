@@ -30,6 +30,16 @@ router.get("/new", (req, res) => {
     res.render("listings/new");
 });
 
+// Show route
+router.get(
+    "/:id",
+    wrapAsync(async (req, res) => {
+      let { id } = req.params;
+      const listing = await Listing.findById(id).populate("reviews");
+      res.render("./listings/show.ejs", { listing, id});
+    })
+  );
+
 // Create New Listing
 router.post(
     "/",
@@ -37,8 +47,8 @@ router.post(
     wrapAsync(async (req, res) => {
         const newListing = new Listing(req.body.listing);
         await newListing.save();
-        res.flash("success", "Congratulations you created a new listings");
-        res.redirect(`/listings/${newListing._id}`);
+        req.flash("success", "Congratulations you created a new listings");
+        res.redirect(`/listings`);
     })
 );
 
