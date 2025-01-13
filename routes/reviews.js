@@ -8,7 +8,6 @@ const Listing = require("../models/listing.js");
 
 
 
-
 const validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body);
     if (error) {
@@ -33,6 +32,7 @@ router.delete("/:reviewId", wrapAsync(async (req, res) => {
     }
     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
+    req.flash("success", "Review is deleted");
     res.redirect(`/listings/${id}`);
   }));
   
@@ -52,6 +52,7 @@ router.post(
       listing.reviews.push(newReview);
       await newReview.save();
       await listing.save();
+      req.flash("success", "new review is created");
       res.redirect(`/listings/${listing._id}`);
     })
   );

@@ -36,9 +36,13 @@ router.get(
     wrapAsync(async (req, res) => {
       let { id } = req.params;
       const listing = await Listing.findById(id).populate("reviews");
+        if(!listing){
+            req.flash("error","listing you created doesn't exist");
+            res.redirect("/listings");
+        }
       res.render("./listings/show.ejs", { listing, id});
     })
-  );
+    );
 
 // Create New Listing
 router.post(
@@ -77,6 +81,7 @@ router.put(
         if (!updatedListing) {
             throw new ExpressError(404, "Listing not found");
         }
+        req.flash("success","you listing is updated");
         res.redirect(`/listings/${req.params.id}`);
     })
 );
@@ -89,6 +94,7 @@ router.delete(
         if (!deletedListing) {
             throw new ExpressError(404, "Listing not found");
         }
+        req.flash("success", "Listing is deleted");
         res.redirect("/listings");
     })
 );

@@ -81,9 +81,10 @@ router["delete"]("/:reviewId", wrapAsync(function _callee(req, res) {
           return regeneratorRuntime.awrap(Review.findByIdAndDelete(reviewId));
 
         case 15:
+          req.flash("success", "Review is deleted");
           res.redirect("/listings/".concat(id));
 
-        case 16:
+        case 17:
         case "end":
           return _context.stop();
       }
@@ -122,9 +123,10 @@ router.post("/", validateReview, wrapAsync(function _callee2(req, res) {
           return regeneratorRuntime.awrap(listing.save());
 
         case 12:
+          req.flash("success", "new review is created");
           res.redirect("/listings/".concat(listing._id));
 
-        case 13:
+        case 14:
         case "end":
           return _context2.stop();
       }

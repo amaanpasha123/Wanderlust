@@ -61,8 +61,8 @@ var sessionOptions = {
 app.use(sessions(sessionOptions));
 app.use(flash());
 app.use(function (req, res, next) {
-  res.locals.successmsg = req.flash("success"); // res.locals.error = req.flash("error");
-
+  res.locals.successmsg = req.flash("success");
+  res.locals.error = req.flash("error");
   console.log(res.locals.successmsg);
   next();
 }); //usage of routers......

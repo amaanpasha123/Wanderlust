@@ -69,12 +69,18 @@ router.get("/:id", wrapAsync(function _callee2(req, res) {
 
         case 3:
           listing = _context2.sent;
+
+          if (!listing) {
+            req.flash("error", "listing you created doesn't exist");
+            res.redirect("/listings");
+          }
+
           res.render("./listings/show.ejs", {
             listing: listing,
             id: id
           });
 
-        case 5:
+        case 6:
         case "end":
           return _context2.stop();
       }
@@ -159,9 +165,10 @@ router.put("/:id", validateListing, wrapAsync(function _callee5(req, res) {
           throw new ExpressError(404, "Listing not found");
 
         case 5:
+          req.flash("success", "you listing is updated");
           res.redirect("/listings/".concat(req.params.id));
 
-        case 6:
+        case 7:
         case "end":
           return _context5.stop();
       }
@@ -189,9 +196,10 @@ router["delete"]("/:id", wrapAsync(function _callee6(req, res) {
           throw new ExpressError(404, "Listing not found");
 
         case 5:
+          req.flash("success", "Listing is deleted");
           res.redirect("/listings");
 
-        case 6:
+        case 7:
         case "end":
           return _context6.stop();
       }
