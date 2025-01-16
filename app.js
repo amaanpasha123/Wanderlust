@@ -16,6 +16,10 @@ const reviews = require("./routes/reviews.js");
 //session for some small task 
 const sessions = require("express-session");
 const flash = require("connect-flash");//for the purpose of flash messages.....
+//passport
+const passport = require("passport");
+const localpassport = require("passport-local");
+const User = require("./models/user.js");
 
 
 
@@ -44,6 +48,12 @@ const sessionOptions = {
 
 app.use(sessions(sessionOptions));
 app.use(flash());
+
+//passport session in this......
+app.use(passport.initialize);
+
+
+
 
 app.use((req, res, next) => {
   res.locals.successmsg = req.flash("success");

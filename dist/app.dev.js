@@ -36,7 +36,14 @@ var reviews = require("./routes/reviews.js"); //session for some small task
 var sessions = require("express-session");
 
 var flash = require("connect-flash"); //for the purpose of flash messages.....
-// EJS engine setup
+//passport
+
+
+var passport = require("passport");
+
+var localpassport = require("passport-local");
+
+var User = require("./models/user.js"); // EJS engine setup
 
 
 app.engine("ejs", ejsMate);
@@ -59,7 +66,9 @@ var sessionOptions = {
 
 };
 app.use(sessions(sessionOptions));
-app.use(flash());
+app.use(flash()); //passport session in this......
+
+app.use(passport.initialize);
 app.use(function (req, res, next) {
   res.locals.successmsg = req.flash("success");
   res.locals.error = req.flash("error");
