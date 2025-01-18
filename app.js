@@ -18,8 +18,8 @@ const sessions = require("express-session");
 const flash = require("connect-flash");//for the purpose of flash messages.....
 //passport
 const passport = require("passport");
-const localpassport = require("passport-local");
-const User = require("./models/user.js");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");//schema this is
 
 
 
@@ -50,8 +50,9 @@ app.use(sessions(sessionOptions));
 app.use(flash());
 
 //passport session in this......
-app.use(passport.initialize);
-
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
 
 
 
@@ -61,11 +62,37 @@ app.use((req, res, next) => {
   console.log(res.locals.successmsg);
   next();
 });
+//demo of user
+app.get("/demoUser", async (req, res, next) => {
+  try {
+    const existingUser = await User.findOne({ username: "sigma-student" });
+    if (existingUser) {
+      return res.status(400).send("User with this username already exists.");
+    }
+
+    const fakeUser = new User({
+      email: "student@gmail.com",
+      username: "sigma-student",
+    });
+    const registerUser = await User.register(fakeUser, "theamaanmustafa");
+    res.send(registerUser);
+  } catch (err) {
+    if (err.name === "UserExistsError") {
+      return res.status(400).send("User already exists. Please use a different username.");
+    }
+    console.error("Unexpected error:", err);
+    res.status(500).send("An unexpected error occurred.");
+  }
+});
 
 
 //usage of routers......
 app.use("/listings",listings);
 app.use("/listings/:id/reviews",reviews);
+
+// use static serialize and deserialize of model for passport session support
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 
 
@@ -76,7 +103,7 @@ mongoose
   })
   .catch((err) => {
     console.error("Failed to connect to MongoDB", err);
-  });
+});
 
 
 
@@ -100,7 +127,11 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error", { message, statusCode });
 });
 
+
+
 // Start Server
 app.listen(8080, () => {
   console.log("Server is running on port 8080");
 });
+
+
