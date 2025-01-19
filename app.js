@@ -11,8 +11,9 @@ const wrapAsync = require("./utils/wrapAsyc.js"); // Corrected the import name//
 const ExpressError = require("./utils/ExpressErrors.js"); // Corrected filename
 const { listingSchema, reviewSchema } = require("./schema.js");
 //routers
-const listings = require("./routes/listing.js");
-const reviews = require("./routes/reviews.js");
+const listingRouter = require("./routes/listing.js");
+const reviewsRouter = require("./routes/reviews.js");
+const usersRouter = require("./routes/user.js");
 //session for some small task 
 const sessions = require("express-session");
 const flash = require("connect-flash");//for the purpose of flash messages.....
@@ -71,8 +72,8 @@ app.get("/demoUser", async (req, res, next) => {
     }
 
     const fakeUser = new User({
-      email: "student@gmail.com",
-      username: "sigma-student",
+      email: "student2@gmail.com",
+      username: "sigma2-student",
     });
     const registerUser = await User.register(fakeUser, "theamaanmustafa");
     res.send(registerUser);
@@ -87,8 +88,9 @@ app.get("/demoUser", async (req, res, next) => {
 
 
 //usage of routers......
-app.use("/listings",listings);
-app.use("/listings/:id/reviews",reviews);
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewsRouter);
+app.use("/", usersRouter);
 
 // use static serialize and deserialize of model for passport session support
 passport.serializeUser(User.serializeUser());

@@ -28,9 +28,11 @@ var _require = require("./schema.js"),
     reviewSchema = _require.reviewSchema; //routers
 
 
-var listings = require("./routes/listing.js");
+var listingRouter = require("./routes/listing.js");
 
-var reviews = require("./routes/reviews.js"); //session for some small task 
+var reviewsRouter = require("./routes/reviews.js");
+
+var usersRouter = require("./routes/user.js"); //session for some small task 
 
 
 var sessions = require("express-session");
@@ -103,8 +105,8 @@ app.get("/demoUser", function _callee(req, res, next) {
 
         case 6:
           fakeUser = new User({
-            email: "student@gmail.com",
-            username: "sigma-student"
+            email: "student2@gmail.com",
+            username: "sigma2-student"
           });
           _context.next = 9;
           return regeneratorRuntime.awrap(User.register(fakeUser, "theamaanmustafa"));
@@ -138,8 +140,9 @@ app.get("/demoUser", function _callee(req, res, next) {
   }, null, null, [[0, 13]]);
 }); //usage of routers......
 
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews); // use static serialize and deserialize of model for passport session support
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewsRouter);
+app.use("/", usersRouter); // use static serialize and deserialize of model for passport session support
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
