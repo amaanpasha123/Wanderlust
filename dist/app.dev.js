@@ -80,65 +80,27 @@ app.use(function (req, res, next) {
   console.log(res.locals.successmsg);
   next();
 }); //demo of user
-
-app.get("/demoUser", function _callee(req, res, next) {
-  var existingUser, fakeUser, registerUser;
-  return regeneratorRuntime.async(function _callee$(_context) {
-    while (1) {
-      switch (_context.prev = _context.next) {
-        case 0:
-          _context.prev = 0;
-          _context.next = 3;
-          return regeneratorRuntime.awrap(User.findOne({
-            username: "sigma-student"
-          }));
-
-        case 3:
-          existingUser = _context.sent;
-
-          if (!existingUser) {
-            _context.next = 6;
-            break;
-          }
-
-          return _context.abrupt("return", res.status(400).send("User with this username already exists."));
-
-        case 6:
-          fakeUser = new User({
-            email: "student2@gmail.com",
-            username: "sigma2-student"
-          });
-          _context.next = 9;
-          return regeneratorRuntime.awrap(User.register(fakeUser, "theamaanmustafa"));
-
-        case 9:
-          registerUser = _context.sent;
-          res.send(registerUser);
-          _context.next = 19;
-          break;
-
-        case 13:
-          _context.prev = 13;
-          _context.t0 = _context["catch"](0);
-
-          if (!(_context.t0.name === "UserExistsError")) {
-            _context.next = 17;
-            break;
-          }
-
-          return _context.abrupt("return", res.status(400).send("User already exists. Please use a different username."));
-
-        case 17:
-          console.error("Unexpected error:", _context.t0);
-          res.status(500).send("An unexpected error occurred.");
-
-        case 19:
-        case "end":
-          return _context.stop();
-      }
-    }
-  }, null, null, [[0, 13]]);
-}); //usage of routers......
+// app.get("/demoUser", async (req, res, next) => {
+//   try {
+//     const existingUser = await User.findOne({ username: "sigma-student" });
+//     if (existingUser) {
+//       return res.status(400).send("User with this username already exists.");
+//     }
+//     const fakeUser = new User({
+//       email: "student2@gmail.com",
+//       username: "sigma2-student",
+//     });
+//     const registerUser = await User.register(fakeUser, "theamaanmustafa");
+//     res.send(registerUser);
+//   } catch (err) {
+//     if (err.name === "UserExistsError") {
+//       return res.status(400).send("User already exists. Please use a different username.");
+//     }
+//     console.error("Unexpected error:", err);
+//     res.status(500).send("An unexpected error occurred.");
+//   }
+// });
+//usage of routers......
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
@@ -156,25 +118,25 @@ mongoose.connect("mongodb://127.0.0.1:27017/WonderLust") // Removed options
 app.get("/", function (req, res) {
   res.redirect("/listings");
 });
-app.get("/listings/:id", wrapAsync(function _callee2(req, res) {
+app.get("/listings/:id", wrapAsync(function _callee(req, res) {
   var id, listing;
-  return regeneratorRuntime.async(function _callee2$(_context2) {
+  return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
-      switch (_context2.prev = _context2.next) {
+      switch (_context.prev = _context.next) {
         case 0:
           id = req.params.id;
-          _context2.next = 3;
+          _context.next = 3;
           return regeneratorRuntime.awrap(Listing.findById(id).populate("reviews"));
 
         case 3:
-          listing = _context2.sent;
+          listing = _context.sent;
           res.render("listings/show", {
             listing: listing
           });
 
         case 5:
         case "end":
-          return _context2.stop();
+          return _context.stop();
       }
     }
   });

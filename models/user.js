@@ -10,7 +10,7 @@ const userSchema = new Schema({
     },
 });
 
-userSchema.plugin(passportLocalMongoose); //by plugin it automatically generate username and hashing password
+userSchema.plugin(passportLocalMongoose);  //by plugin it automatically generate username and hashing password
 
 module.exports = mongoose.model("User", userSchema);
 
