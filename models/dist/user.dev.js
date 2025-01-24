@@ -1,9 +1,5 @@
 "use strict";
 
-var _require = require("joi"),
-    types = _require.types,
-    required = _require.required;
-
 var mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
