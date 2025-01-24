@@ -18,7 +18,7 @@ router.post("/sigup", function _callee(req, res) {
         case 0:
           _req$body = req.body, username = _req$body.username, id = _req$body.id, password = _req$body.password;
           newuser = new User({
-            email: email,
+            id: id,
             username: username
           });
           _context.next = 4;
