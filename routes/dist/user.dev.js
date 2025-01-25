@@ -6,19 +6,21 @@ var router = express.Router();
 
 var User = require("../models/user");
 
+var wrapAsyc = require("../utils/wrapAsyc");
+
 router.get("/signup", function (req, res) {
   res.render("users/signup");
 });
-router.post("/sigup", function _callee(req, res) {
-  var _req$body, username, id, password, newuser, registerUser;
+router.post("/signup", wrapAsyc(function _callee(req, res) {
+  var _req$body, username, email, password, newuser, registerUser;
 
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          _req$body = req.body, username = _req$body.username, id = _req$body.id, password = _req$body.password;
+          _req$body = req.body, username = _req$body.username, email = _req$body.email, password = _req$body.password;
           newuser = new User({
-            id: id,
+            email: email,
             username: username
           });
           _context.next = 4;
@@ -36,5 +38,5 @@ router.post("/sigup", function _callee(req, res) {
       }
     }
   });
-});
+}));
 module.exports = router;
