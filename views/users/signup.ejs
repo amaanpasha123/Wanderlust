@@ -1,54 +1,63 @@
 <% layout("layouts/boilerplate") %>
-<div class="row mt-3">
-    <h1 class="col-6 offset-3 text-center">Sign Up for Roomify</h1>
-    <div class="col-6 offset-3">
-        <form action="/signup" method="post" class="needs-validation" novalidate>
-            <!-- Username Field -->
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input 
-                    type="text" 
-                    id="username" 
-                    name="username" 
-                    placeholder="Enter your username" 
-                    class="form-control" 
-                    required>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Please enter a username.</div>
-            </div>
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card shadow-lg rounded-3" style="width: 400px;">
+        <div class="card-body p-4">
+            <h2 class="card-title text-center mb-4">Sign Up for Roomify</h2>
+            <form action="/signup" method="post" class="needs-validation" novalidate>
+                <!-- Username Field -->
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        placeholder="Enter your username" 
+                        class="form-control form-control-lg" 
+                        required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Please enter a username.</div>
+                </div>
 
-            <!-- Email Field -->
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    placeholder="Enter your email" 
-                    class="form-control" 
-                    required>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Please enter a valid email address.</div>
-            </div>
+                <!-- Email Field -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="Enter your email" 
+                        class="form-control form-control-lg" 
+                        required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Please enter a valid email address.</div>
+                </div>
 
-            <!-- Password Field -->
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    placeholder="Enter your password" 
-                    class="form-control" 
-                    required>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Please enter a password.</div>
-            </div>
+                <!-- Password Field -->
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password" 
+                        class="form-control form-control-lg" 
+                        required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Please enter a password.</div>
+                </div>
 
-            <!-- Submit Button -->
-            <div class="mb-3">
-                <button type="submit" class="btn btn-primary w-100">Sign Up</button>
-            </div>
-        </form>
+                <!-- Submit Button -->
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        Sign Up
+                    </button>
+                </div>
+
+                <!-- Additional Links -->
+                <div class="text-center">
+                    <p class="mb-0">Already have an account? <a href="/login" class="text-primary">Log In</a></p>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
