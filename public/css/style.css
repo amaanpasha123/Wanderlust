@@ -108,8 +108,13 @@ footer {
 /* Cards */
 .listing-card{
     border: none !important;
+    box-shadow: none !important;
 }
 
+.card {
+    border: none !important; /* Ensures no border on the card */
+    box-shadow: none !important; /* Removes any default shadow styling */
+}
 .card-img-top{
     border-radius: 5px;
     width: 100%;
