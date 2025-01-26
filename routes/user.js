@@ -1,46 +1,48 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user");
-const wrapAsyc = require("../utils/wrapAsyc");
+const User = require("../models/user.js");
+const wrapAsync = require("../utils/wrapAsyc.js");
 const passport = require("passport");
 
 
-
+// Signup route
 router.get("/signup", (req, res) => {
     res.render("users/signup");
-});  
+});
 
 
+router.post(
+    "/signup",
+    wrapAsync(async (req, res) => {
+        let { username, email, password } = req.body;
+        const newUser = new User({ email, username });
+        const registeredUser = await User.register(newUser, password);
+        console.log(registeredUser);
+        req.flash("success", "User was registered successfully!");
+        res.redirect("/listings");
+    })
+);
 
-router.post("/signup",wrapAsyc( async(req, res)=>{
-    try{
-        let{username, email, password} = req.body;
-    const newuser = new User({email, username});
-    const registerUser = await User.register(newuser, password);
-    console.log(registerUser);
-    req.flash("success","user was registered");
-    res.redirect("/listings");
-    }
-    catch(e){
-        req.flash("error", e.message);
-        res.redirect("/signup");
-    }
-    
-}));
 
-router.get("/login", (req, res)=>{
+// Login route
+router.get("/login", (req, res) => {
     res.render("users/login");
 });
 
-router.post("/login" ,passport.Authenticator("local", 
-    {failureRedirect : "/login",
-        failureFlash : true
-    }    
-), async (req, res)=>{
-    res.send("welcome to roomify you are logged in");
-});
 
-
+router.post(
+    "/login",
+    passport.authenticate("local", {
+        failureRedirect: "/login",
+        failureFlash: true,
+    }),
+    async (req, res) => {
+        req.flash("success", "welcome to with your account");
+        res.redirect("/listings");
+    }
+);
 
 
 module.exports = router;
+
+
