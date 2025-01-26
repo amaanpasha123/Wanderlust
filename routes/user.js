@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const wrapAsyc = require("../utils/wrapAsyc");
+const passport = require("passport");
 
 
 
@@ -26,6 +27,20 @@ router.post("/signup",wrapAsyc( async(req, res)=>{
     }
     
 }));
+
+router.get("/login", (req, res)=>{
+    res.render("users/login");
+});
+
+router.post("/login" ,passport.Authenticator("local", 
+    {failureRedirect : "/login",
+        failureFlash : true
+    }    
+), async (req, res)=>{
+    res.send("welcome to roomify you are logged in");
+});
+
+
 
 
 module.exports = router;

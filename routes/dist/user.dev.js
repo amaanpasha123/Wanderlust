@@ -8,6 +8,8 @@ var User = require("../models/user");
 
 var wrapAsyc = require("../utils/wrapAsyc");
 
+var passport = require("passport");
+
 router.get("/signup", function (req, res) {
   res.render("users/signup");
 });
@@ -48,4 +50,24 @@ router.post("/signup", wrapAsyc(function _callee(req, res) {
     }
   }, null, null, [[0, 11]]);
 }));
+router.get("/login", function (req, res) {
+  res.render("users/login");
+});
+router.post("/login", passport.Authenticator("local", {
+  failureRedirect: "/login",
+  failureFlash: true
+}), function _callee2(req, res) {
+  return regeneratorRuntime.async(function _callee2$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          res.send("welcome to roomify you are logged in");
+
+        case 1:
+        case "end":
+          return _context2.stop();
+      }
+    }
+  });
+});
 module.exports = router;
