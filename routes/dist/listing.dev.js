@@ -54,6 +54,11 @@ router.get("/", wrapAsync(function _callee(req, res) {
 })); // New Listing Form
 
 router.get("/new", function (req, res) {
+  if (!req.isAuthenticated()) {
+    req.flash("error", "user is not Authenticated");
+    return res.redirect("/listings");
+  }
+
   res.render("listings/new");
 }); // Show route
 
