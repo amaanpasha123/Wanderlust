@@ -1,22 +1,33 @@
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+<nav class="navbar navbar-expand-md bg-light border-bottom sticky-top shadow-sm py-2">
   <div class="container-fluid">
-    <a class="navbar-brand d-flex align-items-center" href="/listings">
-      <i class="fa-regular fa-compass"></i>
-      <span class="ms-2">Roomify</span>
+    <!-- Brand Logo -->
+    <a class="navbar-brand d-flex align-items-center text-primary fw-bold" href="/listings">
+      <i class="fa-regular fa-compass fs-4"></i>
+      <span class="ms-2 fs-4">Roomify</span>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+
+    <!-- Toggler Button -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
+    <!-- Navbar Links -->
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <!-- Left-aligned Links -->
       <div class="navbar-nav">
-        <a class="nav-link active" aria-current="page" href="/">Home</a>
-        <a class="nav-link" href="/listings">All Listings</a>
-        <a class="nav-link" href="/listings/new">Add new listings</a>
+        <a class="nav-link active text-dark fw-semibold" aria-current="page" href="/">Home</a>
+        <a class="nav-link text-dark fw-semibold" href="/listings">All Listings</a>
+        <a class="nav-link text-dark fw-semibold" href="/listings/new">Add New Listing</a>
       </div>
-      <div class="navbar-nav ms-auto" >
-        <a class="nav-link active"  href="/signup">Sign Up</a>
-        <a class="nav-link" href="/login">Log In</a>
-        <a class="nav-link" href="/logout">Log Out</a>
+
+      <!-- Right-aligned Links -->
+      <div class="navbar-nav ms-auto">
+        <% if (!currentUser) { %>
+          <a class="nav-link text-primary fw-semibold" href="/signup">Sign Up</a>
+          <a class="nav-link text-primary fw-semibold" href="/login">Log In</a>
+        <% } else { %>
+          <a class="nav-link text-danger fw-semibold" href="/logout">Log Out</a>
+        <% } %>
       </div>
     </div>
   </div>

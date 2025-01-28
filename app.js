@@ -57,12 +57,18 @@ passport.use(new LocalStrategy(User.authenticate()));
 
 
 
+
+
 app.use((req, res, next) => {
+  res.locals.currentUser = req.user || null; // Make `currentUser` accessible in all templates
   res.locals.successmsg = req.flash("success");
   res.locals.error = req.flash("error");
   console.log(res.locals.successmsg);
   next();
 });
+
+
+
 //demo of user
 // app.get("/demoUser", async (req, res, next) => {
 //   try {

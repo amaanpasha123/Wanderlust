@@ -75,6 +75,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 app.use(function (req, res, next) {
+  res.locals.currentUser = req.user || null; // Make `currentUser` accessible in all templates
+
   res.locals.successmsg = req.flash("success");
   res.locals.error = req.flash("error");
   console.log(res.locals.successmsg);
