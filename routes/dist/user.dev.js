@@ -64,4 +64,14 @@ router.post("/login", passport.authenticate("local", {
     }
   });
 });
+router.get("/logout", function (req, res, next) {
+  req.logOut(function (err) {
+    if (err) {
+      return next(err);
+    }
+
+    req.flash("success", "you have properly logged out");
+    res.redirect("/listings");
+  });
+});
 module.exports = router;
