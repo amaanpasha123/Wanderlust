@@ -12,7 +12,10 @@ var _require = require("../schema"),
 
 var ExpressError = require("../utils/ExpressErrors");
 
-var Listing = require("../models/listing"); // Validation middleware
+var Listing = require("../models/listing");
+
+var _require2 = require("../middleware.js"),
+    isLoggedIn = _require2.isLoggedIn; // Validation middleware
 
 
 var validateListing = function validateListing(req, res, next) {
@@ -53,12 +56,7 @@ router.get("/", wrapAsync(function _callee(req, res) {
   });
 })); // New Listing Form
 
-router.get("/new", function (req, res) {
-  if (!req.isAuthenticated()) {
-    req.flash("error", "user is not Authenticated");
-    return res.redirect("/listings");
-  }
-
+router.get("/new", isLoggedIn, function (req, res) {
   res.render("listings/new");
 }); // Show route
 
@@ -115,7 +113,7 @@ router.post("/", validateListing, wrapAsync(function _callee3(req, res) {
   });
 })); // Edit Listing Form
 
-router.get("/:id/edit", wrapAsync(function _callee4(req, res) {
+router.get("/:id/edit", isLoggedIn, wrapAsync(function _callee4(req, res) {
   var listing;
   return regeneratorRuntime.async(function _callee4$(_context4) {
     while (1) {
@@ -147,7 +145,7 @@ router.get("/:id/edit", wrapAsync(function _callee4(req, res) {
   });
 })); // Update Listing
 
-router.put("/:id", validateListing, wrapAsync(function _callee5(req, res) {
+router.put("/:id", isLoggedIn, validateListing, wrapAsync(function _callee5(req, res) {
   var updatedListing;
   return regeneratorRuntime.async(function _callee5$(_context5) {
     while (1) {
@@ -181,7 +179,7 @@ router.put("/:id", validateListing, wrapAsync(function _callee5(req, res) {
   });
 })); // Delete Listing
 
-router["delete"]("/:id", wrapAsync(function _callee6(req, res) {
+router["delete"]("/:id", isLoggedIn, wrapAsync(function _callee6(req, res) {
   var deletedListing;
   return regeneratorRuntime.async(function _callee6$(_context6) {
     while (1) {

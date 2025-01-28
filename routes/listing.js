@@ -4,6 +4,7 @@ const wrapAsync = require("../utils/wrapAsyc.js");
 const { listingSchema } = require("../schema"); // Removed reviewSchema since it isn't used
 const ExpressError = require("../utils/ExpressErrors");
 const Listing = require("../models/listing");
+const {isLoggedIn} = require("../middleware.js");
 
 // Validation middleware
 const validateListing = (req, res, next) => {
@@ -26,11 +27,7 @@ router.get(
 );
 
 // New Listing Form
-router.get("/new", (req, res) => {
-    if(!req.isAuthenticated()){
-        req.flash("error", "user is not Authenticated");
-        return res.redirect("/listings");
-    }
+router.get("/new", isLoggedIn, (req, res) => {
     res.render("listings/new");
 });
 
@@ -60,9 +57,11 @@ router.post(
     })
 );
 
+
 // Edit Listing Form
 router.get(
     "/:id/edit",
+    isLoggedIn,
     wrapAsync(async (req, res) => {
         const listing = await Listing.findById(req.params.id);
         if (!listing) {
@@ -75,6 +74,7 @@ router.get(
 // Update Listing
 router.put(
     "/:id",
+    isLoggedIn,
     validateListing,
     wrapAsync(async (req, res) => {
         const updatedListing = await Listing.findByIdAndUpdate(
@@ -93,6 +93,7 @@ router.put(
 // Delete Listing
 router.delete(
     "/:id",
+    isLoggedIn,
     wrapAsync(async (req, res) => {
         const deletedListing = await Listing.findByIdAndDelete(req.params.id);
         if (!deletedListing) {
