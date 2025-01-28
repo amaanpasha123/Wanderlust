@@ -65,7 +65,7 @@ router.post("/login", passport.authenticate("local", {
   });
 });
 router.get("/logout", function (req, res, next) {
-  req.logOut(function (err) {
+  req.logout(function (err) {
     if (err) {
       return next(err);
     }
@@ -73,5 +73,12 @@ router.get("/logout", function (req, res, next) {
     req.flash("success", "you have properly logged out");
     res.redirect("/listings");
   });
-});
+}); // req.logout(function (err) {
+//     if (err) {
+//         return next(err);
+//     }
+//     req.flash("success", "You have properly logged out");
+//     res.redirect("/listings");
+// });
+
 module.exports = router;

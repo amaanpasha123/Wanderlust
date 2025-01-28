@@ -31,19 +31,40 @@ router.get("/new", isLoggedIn, (req, res) => {
     res.render("listings/new");
 });
 
-// Show route
+// // Show route
+// router.get(
+//     "/:id",
+//     wrapAsync(async (req, res) => {
+//       let { id } = req.params;
+//       const listing = await Listing.findById(id).populate("reviews");
+//         if(!listing){
+//             req.flash("error","listing you created doesn't exist");
+//             res.redirect("/listings");
+//         }
+//       res.render("./listings/show.ejs", { listing, id});
+//     })
+//     );
+
+const mongoose = require("mongoose");
+
 router.get(
     "/:id",
     wrapAsync(async (req, res) => {
-      let { id } = req.params;
-      const listing = await Listing.findById(id).populate("reviews");
-        if(!listing){
-            req.flash("error","listing you created doesn't exist");
-            res.redirect("/listings");
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            req.flash("error", "Invalid listing ID");
+            return res.redirect("/listings");
         }
-      res.render("./listings/show.ejs", { listing, id});
+        const listing = await Listing.findById(id).populate("reviews");
+        if (!listing) {
+            req.flash("error", "Listing not found");
+            return res.redirect("/listings");
+        }
+        res.render("./listings/show.ejs", { listing });
     })
-    );
+);
+
+
 
 // Create New Listing
 router.post(

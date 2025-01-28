@@ -58,7 +58,21 @@ router.get("/", wrapAsync(function _callee(req, res) {
 
 router.get("/new", isLoggedIn, function (req, res) {
   res.render("listings/new");
-}); // Show route
+}); // // Show route
+// router.get(
+//     "/:id",
+//     wrapAsync(async (req, res) => {
+//       let { id } = req.params;
+//       const listing = await Listing.findById(id).populate("reviews");
+//         if(!listing){
+//             req.flash("error","listing you created doesn't exist");
+//             res.redirect("/listings");
+//         }
+//       res.render("./listings/show.ejs", { listing, id});
+//     })
+//     );
+
+var mongoose = require("mongoose");
 
 router.get("/:id", wrapAsync(function _callee2(req, res) {
   var id, listing;
@@ -67,23 +81,36 @@ router.get("/:id", wrapAsync(function _callee2(req, res) {
       switch (_context2.prev = _context2.next) {
         case 0:
           id = req.params.id;
-          _context2.next = 3;
-          return regeneratorRuntime.awrap(Listing.findById(id).populate("reviews"));
 
-        case 3:
-          listing = _context2.sent;
-
-          if (!listing) {
-            req.flash("error", "listing you created doesn't exist");
-            res.redirect("/listings");
+          if (mongoose.Types.ObjectId.isValid(id)) {
+            _context2.next = 4;
+            break;
           }
 
-          res.render("./listings/show.ejs", {
-            listing: listing,
-            id: id
-          });
+          req.flash("error", "Invalid listing ID");
+          return _context2.abrupt("return", res.redirect("/listings"));
+
+        case 4:
+          _context2.next = 6;
+          return regeneratorRuntime.awrap(Listing.findById(id).populate("reviews"));
 
         case 6:
+          listing = _context2.sent;
+
+          if (listing) {
+            _context2.next = 10;
+            break;
+          }
+
+          req.flash("error", "Listing not found");
+          return _context2.abrupt("return", res.redirect("/listings"));
+
+        case 10:
+          res.render("./listings/show.ejs", {
+            listing: listing
+          });
+
+        case 11:
         case "end":
           return _context2.stop();
       }
