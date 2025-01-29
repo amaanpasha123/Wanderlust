@@ -31,11 +31,17 @@ router.post("/signup", wrapAsync(function _callee(req, res) {
 
         case 4:
           registeredUser = _context.sent;
-          console.log(registeredUser);
-          req.flash("success", "User was registered successfully!");
-          res.redirect("/listings");
+          // console.log(registeredUser);
+          req.login(registeredUser, function (err) {
+            if (err) {
+              return next(err);
+            }
 
-        case 8:
+            req.flash("success", "User was registered successfully!");
+            res.redirect("/listings");
+          });
+
+        case 6:
         case "end":
           return _context.stop();
       }
