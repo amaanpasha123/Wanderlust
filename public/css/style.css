@@ -62,72 +62,45 @@ body{
 }
 
 
-
 footer {
-    background-color: #2c3e50; /* Dark background color */
-    color: #ecf0f1; /* Light text color */
-    padding: 20px 0; /* Padding top and bottom */
-    font-family: 'Arial', sans-serif; /* Font family */
-    border-top: 1px solid #34495e; /* Optional: Add a border on top */
+    background-color: black; /* Dark background for the footer */
+    color: #fff; /* White text color */
+    padding: 1.5rem 0; /* Padding for spacing */
+    font-family: 'Arial', sans-serif; /* Choose a modern, clean font */
 }
 
 .f-info {
-    max-width: 1200px; /* Maximum width for the content */
-    margin: 0 auto; /* Center the content */
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 15px; /* Space between child elements */
-}
-
-.f-info-socials {
-    display: flex;
-    gap: 20px; /* Space between social icons */
+    flex-wrap: wrap;
+    justify-content: space-between; /* Spread out elements evenly */
+    align-items: center; /* Center align vertically */
+    max-width: 1200px; /* Restrict footer width */
+    margin: 0 auto; /* Center align the footer content */
+    padding: 0 1rem; /* Add some horizontal padding */
 }
 
 .f-info-socials i {
-    font-size: 24px; /* Icon size */
-    color: #ecf0f1; /* Icon color */
-    transition: color 0.3s ease; /* Smooth color transition on hover */
+     /* White icon color */
+    margin: 0 10px; /* Spacing between icons */
+    font-size: 2rem; /* Increase icon size */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
 }
 
 .f-info-socials i:hover {
-    color: #3498db; /* Icon hover color */
-}
-
-.f-info-links {
-    display: flex;
-    gap: 20px; /* Space between links */
+    color: #f39c12; /* Change color on hover */
 }
 
 .f-info-links a {
-    color: #ecf0f1; /* Link text color */
+    color: #fff; /* White text color for links */
+    margin: 0 10px; /* Spacing between links */
     text-decoration: none; /* Remove underline */
-    font-size: 14px; /* Link font size */
-    transition: color 0.3s ease; /* Smooth color transition on hover */
+    font-size: 1rem; /* Link font size */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
 }
 
 .f-info-links a:hover {
-    color: #3498db; /* Link hover color */
+    text-decoration: underline; /* Remove underline */
 }
-
-/* Responsive design for smaller screens */
-@media (max-width: 768px) {
-    .f-info {
-        padding: 0 20px; /* Add padding on smaller screens */
-    }
-
-    .f-info-socials {
-        gap: 15px; /* Reduce gap between icons */
-    }
-
-    .f-info-links {
-        flex-direction: column; /* Stack links vertically */
-        gap: 10px; /* Reduce gap between links */
-    }
-}
-
  
 /* Cards */
 .listing-card{
