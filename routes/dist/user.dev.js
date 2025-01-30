@@ -8,7 +8,10 @@ var User = require("../models/user.js");
 
 var wrapAsync = require("../utils/wrapAsyc.js");
 
-var passport = require("passport"); // Signup route
+var passport = require("passport");
+
+var _require = require("../middleware.js"),
+    saveRedirectUrl = _require.saveRedirectUrl; // Signup route
 
 
 router.get("/signup", function (req, res) {
@@ -38,7 +41,7 @@ router.post("/signup", wrapAsync(function _callee(req, res) {
             }
 
             req.flash("success", "User was registered successfully!");
-            res.redirect("/listings");
+            res.redirect(req.session.redirectUrl);
           });
 
         case 6:
@@ -52,7 +55,7 @@ router.post("/signup", wrapAsync(function _callee(req, res) {
 router.get("/login", function (req, res) {
   res.render("users/login");
 });
-router.post("/login", passport.authenticate("local", {
+router.post("/login", saveRedirectUrl, passport.authenticate("local", {
   failureRedirect: "/login",
   failureFlash: true
 }), function _callee2(req, res) {
@@ -61,7 +64,7 @@ router.post("/login", passport.authenticate("local", {
       switch (_context2.prev = _context2.next) {
         case 0:
           req.flash("success", "welcome to with your account");
-          res.redirect("/listings");
+          res.redirect(res.locals.redirectUrl);
 
         case 2:
         case "end":
