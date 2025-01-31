@@ -55,7 +55,9 @@ router.get(
             req.flash("error", "Invalid listing ID");
             return res.redirect("/listings");
         }
-        const listing = await Listing.findById(id).populate("reviews");
+        const listing = await Listing.findById(id)
+        .populate("reviews")
+        .populate("owner");
         if (!listing) {
             req.flash("error", "Listing not found");
             return res.redirect("/listings");

@@ -17,6 +17,9 @@
             >
             <div class="card-body">
                 <p class="card-text">
+                    Owned By : <i><%= listing.owner.username %></i>
+                    <br>
+                    <br>
                     <%= listing?.description || 'No description provided.' %> <br>
                     &#8377;<%= (listing?.price || 0).toLocaleString("en-IN") %> <br>
                 </p>
