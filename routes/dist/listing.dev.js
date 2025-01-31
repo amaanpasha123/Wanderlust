@@ -125,14 +125,15 @@ router.post("/", validateListing, wrapAsync(function _callee3(req, res) {
       switch (_context3.prev = _context3.next) {
         case 0:
           newListing = new Listing(req.body.listing);
-          _context3.next = 3;
+          newListing.owner = req.user._id;
+          _context3.next = 4;
           return regeneratorRuntime.awrap(newListing.save());
 
-        case 3:
+        case 4:
           req.flash("success", "Congratulations you created a new listings");
           res.redirect("/listings");
 
-        case 5:
+        case 6:
         case "end":
           return _context3.stop();
       }
