@@ -59,14 +59,16 @@ router.post("/login", saveRedirectUrl, passport.authenticate("local", {
   failureRedirect: "/login",
   failureFlash: true
 }), function _callee2(req, res) {
+  var redirectUrl;
   return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
           req.flash("success", "welcome to with your account");
-          res.redirect(res.locals.redirectUrl);
+          redirectUrl = res.locals.redirectUrl || "/listings";
+          res.redirect(redirectUrl);
 
-        case 2:
+        case 3:
         case "end":
           return _context2.stop();
       }

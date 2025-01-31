@@ -46,7 +46,8 @@ router.post(
     }),
     async (req, res) => {
         req.flash("success", "welcome to with your account");
-        res.redirect(res.locals.redirectUrl);
+        let redirectUrl = res.locals.redirectUrl || "/listings";
+        res.redirect(redirectUrl);
     }
 );
 
