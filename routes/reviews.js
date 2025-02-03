@@ -5,6 +5,7 @@ const { reviewSchema } = require("../schema"); // Removed reviewSchema since it 
 const ExpressError = require("../utils/ExpressErrors");
 const Review = require("../models/review.js");
 const Listing = require("../models/listing.js");
+const { isLoggedIn } = require("../middleware.js");
 
 
 
@@ -41,6 +42,7 @@ router.delete("/:reviewId", wrapAsync(async (req, res) => {
   // Create Review
 router.post(
     "/",
+    isLoggedIn,
     validateReview,
     wrapAsync(async (req, res) => {
       console.log(req.params.id);
@@ -49,6 +51,7 @@ router.post(
         throw new ExpressError(404, "Listing not found");
       }
       const newReview = new Review(req.body.review);
+      newReview.author = req.user._id;
       listing.reviews.push(newReview);
       await newReview.save();
       await listing.save();

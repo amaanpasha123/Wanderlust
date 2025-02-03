@@ -18,6 +18,9 @@ var Review = require("../models/review.js");
 
 var Listing = require("../models/listing.js");
 
+var _require2 = require("../middleware.js"),
+    isLoggedIn = _require2.isLoggedIn;
+
 var validateReview = function validateReview(req, res, next) {
   var _reviewSchema$validat = reviewSchema.validate(req.body),
       error = _reviewSchema$validat.error;
@@ -92,7 +95,7 @@ router["delete"]("/:reviewId", wrapAsync(function _callee(req, res) {
   });
 })); // Create Review
 
-router.post("/", validateReview, wrapAsync(function _callee2(req, res) {
+router.post("/", isLoggedIn, validateReview, wrapAsync(function _callee2(req, res) {
   var listing, newReview;
   return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
@@ -114,19 +117,20 @@ router.post("/", validateReview, wrapAsync(function _callee2(req, res) {
 
         case 6:
           newReview = new Review(req.body.review);
+          newReview.author = req.user._id;
           listing.reviews.push(newReview);
-          _context2.next = 10;
+          _context2.next = 11;
           return regeneratorRuntime.awrap(newReview.save());
 
-        case 10:
-          _context2.next = 12;
+        case 11:
+          _context2.next = 13;
           return regeneratorRuntime.awrap(listing.save());
 
-        case 12:
+        case 13:
           req.flash("success", "new review is created");
           res.redirect("/listings/".concat(listing._id));
 
-        case 14:
+        case 15:
         case "end":
           return _context2.stop();
       }
