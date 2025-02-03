@@ -5,6 +5,7 @@ const { listingSchema } = require("../schema"); // Removed reviewSchema since it
 const ExpressError = require("../utils/ExpressErrors");
 const Listing = require("../models/listing");
 const {isLoggedIn} = require("../middleware.js");
+const {ownerCheck} = require("../middleware.js");
 
 // Validation middleware
 const validateListing = (req, res, next) => {
@@ -99,18 +100,20 @@ router.get(
 router.put(
     "/:id",
     isLoggedIn,
+    ownerCheck,
     validateListing,
     wrapAsync(async (req, res) => {
+        let { id } = req.params;
+        let listing = await Listing.findById(id);
+        // 🔹 Update listing
         const updatedListing = await Listing.findByIdAndUpdate(
-            req.params.id,
+            id,
             req.body.listing,
             { new: true, runValidators: true }
         );
-        if (!updatedListing) {
-            throw new ExpressError(404, "Listing not found");
-        }
-        req.flash("success","you listing is updated");
-        res.redirect(`/listings/${req.params.id}`);
+
+        req.flash("success", "Your listing has been updated!");
+        res.redirect(`/listings/${id}`);
     })
 );
 
@@ -129,8 +132,3 @@ router.delete(
 );
 
 module.exports = router;
-
-
-
-
-

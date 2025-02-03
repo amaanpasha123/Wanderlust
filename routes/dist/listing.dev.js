@@ -15,7 +15,10 @@ var ExpressError = require("../utils/ExpressErrors");
 var Listing = require("../models/listing");
 
 var _require2 = require("../middleware.js"),
-    isLoggedIn = _require2.isLoggedIn; // Validation middleware
+    isLoggedIn = _require2.isLoggedIn;
+
+var _require3 = require("../middleware.js"),
+    ownerCheck = _require3.ownerCheck; // Validation middleware
 
 
 var validateListing = function validateListing(req, res, next) {
@@ -173,33 +176,30 @@ router.get("/:id/edit", isLoggedIn, wrapAsync(function _callee4(req, res) {
   });
 })); // Update Listing
 
-router.put("/:id", isLoggedIn, validateListing, wrapAsync(function _callee5(req, res) {
-  var updatedListing;
+router.put("/:id", isLoggedIn, ownerCheck, validateListing, wrapAsync(function _callee5(req, res) {
+  var id, listing, updatedListing;
   return regeneratorRuntime.async(function _callee5$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
-          _context5.next = 2;
-          return regeneratorRuntime.awrap(Listing.findByIdAndUpdate(req.params.id, req.body.listing, {
+          id = req.params.id;
+          _context5.next = 3;
+          return regeneratorRuntime.awrap(Listing.findById(id));
+
+        case 3:
+          listing = _context5.sent;
+          _context5.next = 6;
+          return regeneratorRuntime.awrap(Listing.findByIdAndUpdate(id, req.body.listing, {
             "new": true,
             runValidators: true
           }));
 
-        case 2:
+        case 6:
           updatedListing = _context5.sent;
+          req.flash("success", "Your listing has been updated!");
+          res.redirect("/listings/".concat(id));
 
-          if (updatedListing) {
-            _context5.next = 5;
-            break;
-          }
-
-          throw new ExpressError(404, "Listing not found");
-
-        case 5:
-          req.flash("success", "you listing is updated");
-          res.redirect("/listings/".concat(req.params.id));
-
-        case 7:
+        case 9:
         case "end":
           return _context5.stop();
       }
