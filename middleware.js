@@ -1,6 +1,5 @@
 const Listing = require("./models/listing");
 
-
 module.exports.isLoggedIn = (req, res, next)=>{
     // console.log(req.user);
     if(!req.isAuthenticated()){
@@ -37,11 +36,7 @@ module.exports.ownerCheck = async (req, res, next)=>{
             req.flash("error", "You don't have permission to update this listing");
             return res.redirect(`/listings/${id}`);
         }
-
-        // 🔹 Handle missing image (prevent validation error)
-        if (!req.body.listing.image || req.body.listing.image.trim() === "") {
-            req.body.listing.image = "/images/default.jpg"; // Set default image
-        }
+        next();
 }
 
 

@@ -121,6 +121,7 @@ router.put(
 router.delete(
     "/:id",
     isLoggedIn,
+    ownerCheck,
     wrapAsync(async (req, res) => {
         const deletedListing = await Listing.findByIdAndDelete(req.params.id);
         if (!deletedListing) {

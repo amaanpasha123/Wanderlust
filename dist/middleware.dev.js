@@ -54,10 +54,7 @@ module.exports.ownerCheck = function _callee(req, res, next) {
           return _context.abrupt("return", res.redirect("/listings/".concat(id)));
 
         case 10:
-          // 🔹 Handle missing image (prevent validation error)
-          if (!req.body.listing.image || req.body.listing.image.trim() === "") {
-            req.body.listing.image = "/images/default.jpg"; // Set default image
-          }
+          next();
 
         case 11:
         case "end":

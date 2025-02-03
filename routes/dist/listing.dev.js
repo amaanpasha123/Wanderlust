@@ -207,7 +207,7 @@ router.put("/:id", isLoggedIn, ownerCheck, validateListing, wrapAsync(function _
   });
 })); // Delete Listing
 
-router["delete"]("/:id", isLoggedIn, wrapAsync(function _callee6(req, res) {
+router["delete"]("/:id", isLoggedIn, ownerCheck, wrapAsync(function _callee6(req, res) {
   var deletedListing;
   return regeneratorRuntime.async(function _callee6$(_context6) {
     while (1) {
