@@ -57,7 +57,9 @@ router.get(
             return res.redirect("/listings");
         }
         const listing = await Listing.findById(id)
-        .populate("reviews")
+        .populate({path : "reviews",
+            populate : {path : "author"}
+        })
         .populate("owner");
         if (!listing) {
             req.flash("error", "Listing not found");
@@ -66,6 +68,7 @@ router.get(
         res.render("./listings/show.ejs", { listing });
     })
 );
+
 
 
 

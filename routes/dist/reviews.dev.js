@@ -19,7 +19,8 @@ var Review = require("../models/review.js");
 var Listing = require("../models/listing.js");
 
 var _require2 = require("../middleware.js"),
-    isLoggedIn = _require2.isLoggedIn;
+    isLoggedIn = _require2.isLoggedIn,
+    isReviewAuthor = _require2.isReviewAuthor;
 
 var validateReview = function validateReview(req, res, next) {
   var _reviewSchema$validat = reviewSchema.validate(req.body),
@@ -36,7 +37,7 @@ var validateReview = function validateReview(req, res, next) {
 }; //deleting the review....
 
 
-router["delete"]("/:reviewId", wrapAsync(function _callee(req, res) {
+router["delete"]("/:reviewId", isLoggedIn, isReviewAuthor, wrapAsync(function _callee(req, res) {
   var _req$params, id, reviewId, listing, review;
 
   return regeneratorRuntime.async(function _callee$(_context) {

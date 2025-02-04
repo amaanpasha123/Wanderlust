@@ -95,7 +95,12 @@ router.get("/:id", wrapAsync(function _callee2(req, res) {
 
         case 4:
           _context2.next = 6;
-          return regeneratorRuntime.awrap(Listing.findById(id).populate("reviews").populate("owner"));
+          return regeneratorRuntime.awrap(Listing.findById(id).populate({
+            path: "reviews",
+            populate: {
+              path: "author"
+            }
+          }).populate("owner"));
 
         case 6:
           listing = _context2.sent;

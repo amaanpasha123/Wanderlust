@@ -2,6 +2,8 @@
 
 var Listing = require("./models/listing");
 
+var Review = require("./models/review");
+
 module.exports.isLoggedIn = function (req, res, next) {
   // console.log(req.user);
   if (!req.isAuthenticated()) {
@@ -59,6 +61,40 @@ module.exports.ownerCheck = function _callee(req, res, next) {
         case 11:
         case "end":
           return _context.stop();
+      }
+    }
+  });
+}; //this middleware check whether the current user is 
+
+
+module.exports.isReviewAuthor = function _callee2(req, res, next) {
+  var _req$params, id, reviewId, review;
+
+  return regeneratorRuntime.async(function _callee2$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          _req$params = req.params, id = _req$params.id, reviewId = _req$params.reviewId;
+          _context2.next = 3;
+          return regeneratorRuntime.awrap(Review.findById(reviewId));
+
+        case 3:
+          review = _context2.sent;
+
+          if (!(!res.locals.currentUser || !review.author.equals(res.locals.currentUser._id))) {
+            _context2.next = 7;
+            break;
+          }
+
+          req.flash("error", "You don't have permission to update this listing");
+          return _context2.abrupt("return", res.redirect("/listings/".concat(id)));
+
+        case 7:
+          next();
+
+        case 8:
+        case "end":
+          return _context2.stop();
       }
     }
   });

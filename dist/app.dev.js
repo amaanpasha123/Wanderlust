@@ -81,28 +81,7 @@ app.use(function (req, res, next) {
   res.locals.error = req.flash("error");
   console.log(res.locals.successmsg);
   next();
-}); //demo of user
-// app.get("/demoUser", async (req, res, next) => {
-//   try {
-//     const existingUser = await User.findOne({ username: "sigma-student" });
-//     if (existingUser) {
-//       return res.status(400).send("User with this username already exists.");
-//     }
-//     const fakeUser = new User({
-//       email: "student2@gmail.com",
-//       username: "sigma2-student",
-//     });
-//     const registerUser = await User.register(fakeUser, "theamaanmustafa");
-//     res.send(registerUser);
-//   } catch (err) {
-//     if (err.name === "UserExistsError") {
-//       return res.status(400).send("User already exists. Please use a different username.");
-//     }
-//     console.error("Unexpected error:", err);
-//     res.status(500).send("An unexpected error occurred.");
-//   }
-// });
-//usage of routers......
+}); //usage of routers......
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewsRouter);

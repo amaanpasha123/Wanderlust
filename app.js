@@ -69,29 +69,6 @@ app.use((req, res, next) => {
 
 
 
-//demo of user
-// app.get("/demoUser", async (req, res, next) => {
-//   try {
-//     const existingUser = await User.findOne({ username: "sigma-student" });
-//     if (existingUser) {
-//       return res.status(400).send("User with this username already exists.");
-//     }
-
-//     const fakeUser = new User({
-//       email: "student2@gmail.com",
-//       username: "sigma2-student",
-//     });
-//     const registerUser = await User.register(fakeUser, "theamaanmustafa");
-//     res.send(registerUser);
-//   } catch (err) {
-//     if (err.name === "UserExistsError") {
-//       return res.status(400).send("User already exists. Please use a different username.");
-//     }
-//     console.error("Unexpected error:", err);
-//     res.status(500).send("An unexpected error occurred.");
-//   }
-// });
-
 
 //usage of routers......
 app.use("/listings", listingRouter);

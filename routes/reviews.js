@@ -5,7 +5,7 @@ const { reviewSchema } = require("../schema"); // Removed reviewSchema since it 
 const ExpressError = require("../utils/ExpressErrors");
 const Review = require("../models/review.js");
 const Listing = require("../models/listing.js");
-const { isLoggedIn } = require("../middleware.js");
+const { isLoggedIn, isReviewAuthor } = require("../middleware.js");
 
 
 
@@ -21,7 +21,11 @@ const validateReview = (req, res, next) => {
 
   
   //deleting the review....
-router.delete("/:reviewId", wrapAsync(async (req, res) => {
+router.delete(
+  "/:reviewId",
+  isLoggedIn,
+  isReviewAuthor,
+  wrapAsync(async (req, res) => {
     const { id, reviewId } = req.params;
     const listing = await Listing.findById(id);
     if (!listing) {

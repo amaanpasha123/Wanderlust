@@ -1,4 +1,5 @@
 const Listing = require("./models/listing");
+const Review = require("./models/review");
 
 module.exports.isLoggedIn = (req, res, next)=>{
     // console.log(req.user);
@@ -40,5 +41,18 @@ module.exports.ownerCheck = async (req, res, next)=>{
 }
 
 
+
+
+//this middleware check whether the current user is 
+module.exports.isReviewAuthor = async (req, res, next)=>{
+    let { id , reviewId } = req.params;
+    let review = await Review.findById(reviewId);
+    // 🔹 Authorization check: Only owner can update
+    if (!res.locals.currentUser || !review.author.equals(res.locals.currentUser._id)) {
+        req.flash("error", "You don't have permission to update this listing");
+        return res.redirect(`/listings/${id}`);
+    }
+    next();
+}
 
 
