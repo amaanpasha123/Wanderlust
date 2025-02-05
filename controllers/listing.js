@@ -71,6 +71,14 @@ module.exports.updationOfListing = async (req, res) => {
 }
 
 
-
+//Deletion of listings........
+module.exports.deletionOfListing = async (req, res) => {
+    const deletedListing = await Listing.findByIdAndDelete(req.params.id);
+    if (!deletedListing) {
+        throw new ExpressError(404, "Listing not found");
+    }
+    req.flash("success", "Listing is deleted");
+    res.redirect("/listings");
+}
 
 

@@ -46,40 +46,11 @@ router.get("/new", isLoggedIn, listingController.renderNewForm); //Show route of
 
 router.get("/:id", wrapAsync(listingController.showListing)); // Create New Listing
 
-router.post("/", validateListing, wrapAsync(listingController.createListing)); // Edit Listing Form
+router.post("/", validateListing, wrapAsync(listingController.createListing)); // Edit Listing Form .. it only renders the form of updation of listing
 
-router.get("/:id/edit", isLoggedIn, wrapAsync(listingController.editExistingListing)); // Update Listing
+router.get("/:id/edit", isLoggedIn, wrapAsync(listingController.editExistingListing)); // Update Listing Actuall editing done in databases
 
 router.put("/:id", isLoggedIn, ownerCheck, validateListing, wrapAsync(listingController.updationOfListing)); // Delete Listing
 
-router["delete"]("/:id", isLoggedIn, ownerCheck, wrapAsync(function _callee(req, res) {
-  var deletedListing;
-  return regeneratorRuntime.async(function _callee$(_context) {
-    while (1) {
-      switch (_context.prev = _context.next) {
-        case 0:
-          _context.next = 2;
-          return regeneratorRuntime.awrap(Listing.findByIdAndDelete(req.params.id));
-
-        case 2:
-          deletedListing = _context.sent;
-
-          if (deletedListing) {
-            _context.next = 5;
-            break;
-          }
-
-          throw new ExpressError(404, "Listing not found");
-
-        case 5:
-          req.flash("success", "Listing is deleted");
-          res.redirect("/listings");
-
-        case 7:
-        case "end":
-          return _context.stop();
-      }
-    }
-  });
-}));
+router["delete"]("/:id", isLoggedIn, ownerCheck, wrapAsync(listingController.deletionOfListing));
 module.exports = router;

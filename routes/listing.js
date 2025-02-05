@@ -47,14 +47,14 @@ router.post(
 );
 
 
-// Edit Listing Form
+// Edit Listing Form .. it only renders the form of updation of listing
 router.get(
     "/:id/edit",
     isLoggedIn,
     wrapAsync(listingController.editExistingListing)
 );
 
-// Update Listing
+// Update Listing Actuall editing done in databases
 router.put(
     "/:id",
     isLoggedIn,
@@ -68,14 +68,10 @@ router.delete(
     "/:id",
     isLoggedIn,
     ownerCheck,
-    wrapAsync(async (req, res) => {
-        const deletedListing = await Listing.findByIdAndDelete(req.params.id);
-        if (!deletedListing) {
-            throw new ExpressError(404, "Listing not found");
-        }
-        req.flash("success", "Listing is deleted");
-        res.redirect("/listings");
-    })
+    wrapAsync(listingController.deletionOfListing)
 );
 
 module.exports = router;
+
+
+

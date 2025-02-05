@@ -169,4 +169,36 @@ module.exports.updationOfListing = function _callee5(req, res) {
       }
     }
   });
+}; //Deletion of listings........
+
+
+module.exports.deletionOfListing = function _callee6(req, res) {
+  var deletedListing;
+  return regeneratorRuntime.async(function _callee6$(_context6) {
+    while (1) {
+      switch (_context6.prev = _context6.next) {
+        case 0:
+          _context6.next = 2;
+          return regeneratorRuntime.awrap(Listing.findByIdAndDelete(req.params.id));
+
+        case 2:
+          deletedListing = _context6.sent;
+
+          if (deletedListing) {
+            _context6.next = 5;
+            break;
+          }
+
+          throw new ExpressError(404, "Listing not found");
+
+        case 5:
+          req.flash("success", "Listing is deleted");
+          res.redirect("/listings");
+
+        case 7:
+        case "end":
+          return _context6.stop();
+      }
+    }
+  });
 };
