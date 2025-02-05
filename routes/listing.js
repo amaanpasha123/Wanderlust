@@ -28,45 +28,18 @@ router.get(
 // New Listing Form
 router.get("/new", isLoggedIn, listingController.renderNewForm);
 
-
-
 const mongoose = require("mongoose");
 
 router.get(
     "/:id",
-    wrapAsync(async (req, res) => {
-        const { id } = req.params;
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            req.flash("error", "Invalid listing ID");
-            return res.redirect("/listings");
-        }
-        const listing = await Listing.findById(id)
-        .populate({path : "reviews",
-            populate : {path : "author"}
-        })
-        .populate("owner");
-        if (!listing) {
-            req.flash("error", "Listing not found");
-            return res.redirect("/listings");
-        }
-        res.render("./listings/show.ejs", { listing });
-    })
+    wrapAsync(listingController.showListing)
 );
-
-
-
 
 // Create New Listing
 router.post(
     "/",
     validateListing,
-    wrapAsync(async (req, res) => {
-        const newListing = new Listing(req.body.listing);
-        newListing.owner = req.user._id;
-        await newListing.save();
-        req.flash("success", "Congratulations you created a new listings");
-        res.redirect(`/listings`);
-    })
+    wrapAsync(listingController.createListing)
 );
 
 
