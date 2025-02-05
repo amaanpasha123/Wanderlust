@@ -20,7 +20,9 @@ var _require2 = require("../middleware.js"),
 var _require3 = require("../middleware.js"),
     ownerCheck = _require3.ownerCheck;
 
-var listingController = require("../controllers/listing.js"); // Validation middleware
+var listingController = require("../controllers/listing.js");
+
+var mongoose = require("mongoose"); // Validation middleware
 
 
 var validateListing = function validateListing(req, res, next) {
@@ -40,91 +42,30 @@ var validateListing = function validateListing(req, res, next) {
 
 router.get("/", wrapAsync(listingController.index)); // New Listing Form
 
-router.get("/new", isLoggedIn, listingController.renderNewForm);
-
-var mongoose = require("mongoose");
+router.get("/new", isLoggedIn, listingController.renderNewForm); //Show route of listings.........
 
 router.get("/:id", wrapAsync(listingController.showListing)); // Create New Listing
 
 router.post("/", validateListing, wrapAsync(listingController.createListing)); // Edit Listing Form
 
-router.get("/:id/edit", isLoggedIn, wrapAsync(function _callee(req, res) {
-  var listing;
+router.get("/:id/edit", isLoggedIn, wrapAsync(listingController.editExistingListing)); // Update Listing
+
+router.put("/:id", isLoggedIn, ownerCheck, validateListing, wrapAsync(listingController.updationOfListing)); // Delete Listing
+
+router["delete"]("/:id", isLoggedIn, ownerCheck, wrapAsync(function _callee(req, res) {
+  var deletedListing;
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap(Listing.findById(req.params.id));
-
-        case 2:
-          listing = _context.sent;
-
-          if (listing) {
-            _context.next = 5;
-            break;
-          }
-
-          throw new ExpressError(404, "Listing not found");
-
-        case 5:
-          res.render("listings/edit", {
-            listing: listing
-          });
-
-        case 6:
-        case "end":
-          return _context.stop();
-      }
-    }
-  });
-})); // Update Listing
-
-router.put("/:id", isLoggedIn, ownerCheck, validateListing, wrapAsync(function _callee2(req, res) {
-  var id, listing, updatedListing;
-  return regeneratorRuntime.async(function _callee2$(_context2) {
-    while (1) {
-      switch (_context2.prev = _context2.next) {
-        case 0:
-          id = req.params.id;
-          _context2.next = 3;
-          return regeneratorRuntime.awrap(Listing.findById(id));
-
-        case 3:
-          listing = _context2.sent;
-          _context2.next = 6;
-          return regeneratorRuntime.awrap(Listing.findByIdAndUpdate(id, req.body.listing, {
-            "new": true,
-            runValidators: true
-          }));
-
-        case 6:
-          updatedListing = _context2.sent;
-          req.flash("success", "Your listing has been updated!");
-          res.redirect("/listings/".concat(id));
-
-        case 9:
-        case "end":
-          return _context2.stop();
-      }
-    }
-  });
-})); // Delete Listing
-
-router["delete"]("/:id", isLoggedIn, ownerCheck, wrapAsync(function _callee3(req, res) {
-  var deletedListing;
-  return regeneratorRuntime.async(function _callee3$(_context3) {
-    while (1) {
-      switch (_context3.prev = _context3.next) {
-        case 0:
-          _context3.next = 2;
           return regeneratorRuntime.awrap(Listing.findByIdAndDelete(req.params.id));
 
         case 2:
-          deletedListing = _context3.sent;
+          deletedListing = _context.sent;
 
           if (deletedListing) {
-            _context3.next = 5;
+            _context.next = 5;
             break;
           }
 
@@ -136,7 +77,7 @@ router["delete"]("/:id", isLoggedIn, ownerCheck, wrapAsync(function _callee3(req
 
         case 7:
         case "end":
-          return _context3.stop();
+          return _context.stop();
       }
     }
   });

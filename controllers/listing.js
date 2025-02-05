@@ -45,4 +45,32 @@ module.exports.createListing = async (req, res) => {
 }
 
 
+//Edit Exiting listings in listings.js this gives the form of listing
+module.exports.editExistingListing = async (req, res) => {
+    const listing = await Listing.findById(req.params.id);
+    if (!listing) {
+        throw new ExpressError(404, "Listing not found");
+    }
+    res.render("listings/edit", { listing });
+}
+
+
+//Updation of listing... here we does and actuall updation in listing....
+module.exports.updationOfListing = async (req, res) => {
+    let { id } = req.params;
+    let listing = await Listing.findById(id);
+    // 🔹 Update listing
+    const updatedListing = await Listing.findByIdAndUpdate(
+        id,
+        req.body.listing,
+        { new: true, runValidators: true }
+    );
+
+    req.flash("success", "Your listing has been updated!");
+    res.redirect(`/listings/${id}`);
+}
+
+
+
+
 

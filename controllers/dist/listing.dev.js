@@ -104,4 +104,69 @@ module.exports.createListing = function _callee3(req, res) {
       }
     }
   });
+}; //Edit Exiting listings in listings.js this gives the form of listing
+
+
+module.exports.editExistingListing = function _callee4(req, res) {
+  var listing;
+  return regeneratorRuntime.async(function _callee4$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.next = 2;
+          return regeneratorRuntime.awrap(Listing.findById(req.params.id));
+
+        case 2:
+          listing = _context4.sent;
+
+          if (listing) {
+            _context4.next = 5;
+            break;
+          }
+
+          throw new ExpressError(404, "Listing not found");
+
+        case 5:
+          res.render("listings/edit", {
+            listing: listing
+          });
+
+        case 6:
+        case "end":
+          return _context4.stop();
+      }
+    }
+  });
+}; //Updation of listing... here we does and actuall updation in listing....
+
+
+module.exports.updationOfListing = function _callee5(req, res) {
+  var id, listing, updatedListing;
+  return regeneratorRuntime.async(function _callee5$(_context5) {
+    while (1) {
+      switch (_context5.prev = _context5.next) {
+        case 0:
+          id = req.params.id;
+          _context5.next = 3;
+          return regeneratorRuntime.awrap(Listing.findById(id));
+
+        case 3:
+          listing = _context5.sent;
+          _context5.next = 6;
+          return regeneratorRuntime.awrap(Listing.findByIdAndUpdate(id, req.body.listing, {
+            "new": true,
+            runValidators: true
+          }));
+
+        case 6:
+          updatedListing = _context5.sent;
+          req.flash("success", "Your listing has been updated!");
+          res.redirect("/listings/".concat(id));
+
+        case 9:
+        case "end":
+          return _context5.stop();
+      }
+    }
+  });
 };

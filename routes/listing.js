@@ -7,6 +7,7 @@ const Listing = require("../models/listing");
 const {isLoggedIn} = require("../middleware.js");
 const {ownerCheck} = require("../middleware.js");
 const listingController = require("../controllers/listing.js");
+const mongoose = require("mongoose");
 
 // Validation middleware
 const validateListing = (req, res, next) => {
@@ -28,12 +29,15 @@ router.get(
 // New Listing Form
 router.get("/new", isLoggedIn, listingController.renderNewForm);
 
-const mongoose = require("mongoose");
 
+
+//Show route of listings.........
 router.get(
     "/:id",
     wrapAsync(listingController.showListing)
 );
+
+
 
 // Create New Listing
 router.post(
@@ -47,13 +51,7 @@ router.post(
 router.get(
     "/:id/edit",
     isLoggedIn,
-    wrapAsync(async (req, res) => {
-        const listing = await Listing.findById(req.params.id);
-        if (!listing) {
-            throw new ExpressError(404, "Listing not found");
-        }
-        res.render("listings/edit", { listing });
-    })
+    wrapAsync(listingController.editExistingListing)
 );
 
 // Update Listing
@@ -62,19 +60,7 @@ router.put(
     isLoggedIn,
     ownerCheck,
     validateListing,
-    wrapAsync(async (req, res) => {
-        let { id } = req.params;
-        let listing = await Listing.findById(id);
-        // 🔹 Update listing
-        const updatedListing = await Listing.findByIdAndUpdate(
-            id,
-            req.body.listing,
-            { new: true, runValidators: true }
-        );
-
-        req.flash("success", "Your listing has been updated!");
-        res.redirect(`/listings/${id}`);
-    })
+    wrapAsync(listingController.updationOfListing)
 );
 
 // Delete Listing
