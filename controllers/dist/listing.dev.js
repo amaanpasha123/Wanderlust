@@ -23,4 +23,9 @@ module.exports.index = function _callee(req, res) {
       }
     }
   });
+}; //rendering new form of listings.....
+
+
+module.exports.renderNewForm = function (req, res) {
+  res.render("listings/new");
 };

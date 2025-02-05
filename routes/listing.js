@@ -6,6 +6,7 @@ const ExpressError = require("../utils/ExpressErrors");
 const Listing = require("../models/listing");
 const {isLoggedIn} = require("../middleware.js");
 const {ownerCheck} = require("../middleware.js");
+const listingController = require("../controllers/listing.js");
 
 // Validation middleware
 const validateListing = (req, res, next) => {
@@ -21,30 +22,13 @@ const validateListing = (req, res, next) => {
 // Index Route - List all listings
 router.get(
     "/",
-    wrapAsync(async (req, res) => {
-        const allListings = await Listing.find({});
-        res.render("listings/index", { allListings });
-    })
+    wrapAsync(listingController.index)
 );
 
 // New Listing Form
-router.get("/new", isLoggedIn, (req, res) => {
-    res.render("listings/new");
-});
+router.get("/new", isLoggedIn, listingController.renderNewForm);
 
-// // Show route
-// router.get(
-//     "/:id",
-//     wrapAsync(async (req, res) => {
-//       let { id } = req.params;
-//       const listing = await Listing.findById(id).populate("reviews");
-//         if(!listing){
-//             req.flash("error","listing you created doesn't exist");
-//             res.redirect("/listings");
-//         }
-//       res.render("./listings/show.ejs", { listing, id});
-//     })
-//     );
+
 
 const mongoose = require("mongoose");
 

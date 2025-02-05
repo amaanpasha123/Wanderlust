@@ -18,7 +18,9 @@ var _require2 = require("../middleware.js"),
     isLoggedIn = _require2.isLoggedIn;
 
 var _require3 = require("../middleware.js"),
-    ownerCheck = _require3.ownerCheck; // Validation middleware
+    ownerCheck = _require3.ownerCheck;
+
+var listingController = require("../controllers/listing.js"); // Validation middleware
 
 
 var validateListing = function validateListing(req, res, next) {
@@ -36,65 +38,30 @@ var validateListing = function validateListing(req, res, next) {
 }; // Index Route - List all listings
 
 
-router.get("/", wrapAsync(function _callee(req, res) {
-  var allListings;
+router.get("/", wrapAsync(listingController.index)); // New Listing Form
+
+router.get("/new", isLoggedIn, listingController.renderNewForm);
+
+var mongoose = require("mongoose");
+
+router.get("/:id", wrapAsync(function _callee(req, res) {
+  var id, listing;
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          _context.next = 2;
-          return regeneratorRuntime.awrap(Listing.find({}));
-
-        case 2:
-          allListings = _context.sent;
-          res.render("listings/index", {
-            allListings: allListings
-          });
-
-        case 4:
-        case "end":
-          return _context.stop();
-      }
-    }
-  });
-})); // New Listing Form
-
-router.get("/new", isLoggedIn, function (req, res) {
-  res.render("listings/new");
-}); // // Show route
-// router.get(
-//     "/:id",
-//     wrapAsync(async (req, res) => {
-//       let { id } = req.params;
-//       const listing = await Listing.findById(id).populate("reviews");
-//         if(!listing){
-//             req.flash("error","listing you created doesn't exist");
-//             res.redirect("/listings");
-//         }
-//       res.render("./listings/show.ejs", { listing, id});
-//     })
-//     );
-
-var mongoose = require("mongoose");
-
-router.get("/:id", wrapAsync(function _callee2(req, res) {
-  var id, listing;
-  return regeneratorRuntime.async(function _callee2$(_context2) {
-    while (1) {
-      switch (_context2.prev = _context2.next) {
-        case 0:
           id = req.params.id;
 
           if (mongoose.Types.ObjectId.isValid(id)) {
-            _context2.next = 4;
+            _context.next = 4;
             break;
           }
 
           req.flash("error", "Invalid listing ID");
-          return _context2.abrupt("return", res.redirect("/listings"));
+          return _context.abrupt("return", res.redirect("/listings"));
 
         case 4:
-          _context2.next = 6;
+          _context.next = 6;
           return regeneratorRuntime.awrap(Listing.findById(id).populate({
             path: "reviews",
             populate: {
@@ -103,15 +70,15 @@ router.get("/:id", wrapAsync(function _callee2(req, res) {
           }).populate("owner"));
 
         case 6:
-          listing = _context2.sent;
+          listing = _context.sent;
 
           if (listing) {
-            _context2.next = 10;
+            _context.next = 10;
             break;
           }
 
           req.flash("error", "Listing not found");
-          return _context2.abrupt("return", res.redirect("/listings"));
+          return _context.abrupt("return", res.redirect("/listings"));
 
         case 10:
           res.render("./listings/show.ejs", {
@@ -120,21 +87,21 @@ router.get("/:id", wrapAsync(function _callee2(req, res) {
 
         case 11:
         case "end":
-          return _context2.stop();
+          return _context.stop();
       }
     }
   });
 })); // Create New Listing
 
-router.post("/", validateListing, wrapAsync(function _callee3(req, res) {
+router.post("/", validateListing, wrapAsync(function _callee2(req, res) {
   var newListing;
-  return regeneratorRuntime.async(function _callee3$(_context3) {
+  return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
-      switch (_context3.prev = _context3.next) {
+      switch (_context2.prev = _context2.next) {
         case 0:
           newListing = new Listing(req.body.listing);
           newListing.owner = req.user._id;
-          _context3.next = 4;
+          _context2.next = 4;
           return regeneratorRuntime.awrap(newListing.save());
 
         case 4:
@@ -143,26 +110,26 @@ router.post("/", validateListing, wrapAsync(function _callee3(req, res) {
 
         case 6:
         case "end":
-          return _context3.stop();
+          return _context2.stop();
       }
     }
   });
 })); // Edit Listing Form
 
-router.get("/:id/edit", isLoggedIn, wrapAsync(function _callee4(req, res) {
+router.get("/:id/edit", isLoggedIn, wrapAsync(function _callee3(req, res) {
   var listing;
-  return regeneratorRuntime.async(function _callee4$(_context4) {
+  return regeneratorRuntime.async(function _callee3$(_context3) {
     while (1) {
-      switch (_context4.prev = _context4.next) {
+      switch (_context3.prev = _context3.next) {
         case 0:
-          _context4.next = 2;
+          _context3.next = 2;
           return regeneratorRuntime.awrap(Listing.findById(req.params.id));
 
         case 2:
-          listing = _context4.sent;
+          listing = _context3.sent;
 
           if (listing) {
-            _context4.next = 5;
+            _context3.next = 5;
             break;
           }
 
@@ -175,57 +142,57 @@ router.get("/:id/edit", isLoggedIn, wrapAsync(function _callee4(req, res) {
 
         case 6:
         case "end":
-          return _context4.stop();
+          return _context3.stop();
       }
     }
   });
 })); // Update Listing
 
-router.put("/:id", isLoggedIn, ownerCheck, validateListing, wrapAsync(function _callee5(req, res) {
+router.put("/:id", isLoggedIn, ownerCheck, validateListing, wrapAsync(function _callee4(req, res) {
   var id, listing, updatedListing;
-  return regeneratorRuntime.async(function _callee5$(_context5) {
+  return regeneratorRuntime.async(function _callee4$(_context4) {
     while (1) {
-      switch (_context5.prev = _context5.next) {
+      switch (_context4.prev = _context4.next) {
         case 0:
           id = req.params.id;
-          _context5.next = 3;
+          _context4.next = 3;
           return regeneratorRuntime.awrap(Listing.findById(id));
 
         case 3:
-          listing = _context5.sent;
-          _context5.next = 6;
+          listing = _context4.sent;
+          _context4.next = 6;
           return regeneratorRuntime.awrap(Listing.findByIdAndUpdate(id, req.body.listing, {
             "new": true,
             runValidators: true
           }));
 
         case 6:
-          updatedListing = _context5.sent;
+          updatedListing = _context4.sent;
           req.flash("success", "Your listing has been updated!");
           res.redirect("/listings/".concat(id));
 
         case 9:
         case "end":
-          return _context5.stop();
+          return _context4.stop();
       }
     }
   });
 })); // Delete Listing
 
-router["delete"]("/:id", isLoggedIn, ownerCheck, wrapAsync(function _callee6(req, res) {
+router["delete"]("/:id", isLoggedIn, ownerCheck, wrapAsync(function _callee5(req, res) {
   var deletedListing;
-  return regeneratorRuntime.async(function _callee6$(_context6) {
+  return regeneratorRuntime.async(function _callee5$(_context5) {
     while (1) {
-      switch (_context6.prev = _context6.next) {
+      switch (_context5.prev = _context5.next) {
         case 0:
-          _context6.next = 2;
+          _context5.next = 2;
           return regeneratorRuntime.awrap(Listing.findByIdAndDelete(req.params.id));
 
         case 2:
-          deletedListing = _context6.sent;
+          deletedListing = _context5.sent;
 
           if (deletedListing) {
-            _context6.next = 5;
+            _context5.next = 5;
             break;
           }
 
@@ -237,7 +204,7 @@ router["delete"]("/:id", isLoggedIn, ownerCheck, wrapAsync(function _callee6(req
 
         case 7:
         case "end":
-          return _context6.stop();
+          return _context5.stop();
       }
     }
   });
