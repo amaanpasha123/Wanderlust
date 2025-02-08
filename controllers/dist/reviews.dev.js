@@ -46,3 +46,62 @@ module.exports.createReviews = function _callee(req, res) {
     }
   });
 };
+
+module.exports.destroyReview = function _callee2(req, res) {
+  var _req$params, id, reviewId, listing, review;
+
+  return regeneratorRuntime.async(function _callee2$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          _req$params = req.params, id = _req$params.id, reviewId = _req$params.reviewId;
+          _context2.next = 3;
+          return regeneratorRuntime.awrap(Listing.findById(id));
+
+        case 3:
+          listing = _context2.sent;
+
+          if (listing) {
+            _context2.next = 6;
+            break;
+          }
+
+          throw new ExpressError(404, "Listing not found");
+
+        case 6:
+          _context2.next = 8;
+          return regeneratorRuntime.awrap(Review.findById(reviewId));
+
+        case 8:
+          review = _context2.sent;
+
+          if (review) {
+            _context2.next = 11;
+            break;
+          }
+
+          throw new ExpressError(404, "Review not found");
+
+        case 11:
+          _context2.next = 13;
+          return regeneratorRuntime.awrap(Listing.findByIdAndUpdate(id, {
+            $pull: {
+              reviews: reviewId
+            }
+          }));
+
+        case 13:
+          _context2.next = 15;
+          return regeneratorRuntime.awrap(Review.findByIdAndDelete(reviewId));
+
+        case 15:
+          req.flash("success", "Review is deleted");
+          res.redirect("/listings/".concat(id));
+
+        case 17:
+        case "end":
+          return _context2.stop();
+      }
+    }
+  });
+};
