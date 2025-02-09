@@ -11,12 +11,12 @@ var wrapAsync = require("../utils/wrapAsyc.js");
 var passport = require("passport");
 
 var _require = require("../middleware.js"),
-    saveRedirectUrl = _require.saveRedirectUrl; // Signup route
+    saveRedirectUrl = _require.saveRedirectUrl;
+
+var userController = require("../controllers/user.js"); // Signup route
 
 
-router.get("/signup", function (req, res) {
-  res.render("users/signup");
-});
+router.get("/signup", userController.renderSingupForm);
 router.post("/signup", wrapAsync(function _callee(req, res) {
   var _req$body, username, email, password, newUser, registeredUser;
 
