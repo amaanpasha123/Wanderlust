@@ -38,3 +38,36 @@ module.exports.SignUp = function _callee(req, res) {
     }
   });
 };
+
+module.exports.renderLoginForm = function (req, res) {
+  res.render("users/login");
+};
+
+module.exports.logIn = function _callee2(req, res) {
+  var redirectUrl;
+  return regeneratorRuntime.async(function _callee2$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          req.flash("success", "welcome to with your account");
+          redirectUrl = res.locals.redirectUrl || "/listings";
+          res.redirect(redirectUrl);
+
+        case 3:
+        case "end":
+          return _context2.stop();
+      }
+    }
+  });
+};
+
+module.exports.logOut = function (req, res, next) {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+
+    req.flash("success", "you have properly logged out");
+    res.redirect("/listings");
+  });
+};

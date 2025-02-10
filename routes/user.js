@@ -10,6 +10,7 @@ const userController = require("../controllers/user.js");
 // Signup route
 router.get("/signup", userController.renderSingupForm);
 
+//SignUp data is being trasfered over here........
 router.post(
     "/signup",
     wrapAsync(userController.SignUp)
@@ -17,9 +18,9 @@ router.post(
 
 
 // Login route
-router.get("/login", (req, res) => {
-    res.render("users/login");
-});
+router.get("/login", userController.renderLoginForm);
+
+
 
 
 router.post(
@@ -29,23 +30,11 @@ router.post(
         failureRedirect: "/login",
         failureFlash: true,
     }),
-    async (req, res) => {
-        req.flash("success", "welcome to with your account");
-        let redirectUrl = res.locals.redirectUrl || "/listings";
-        res.redirect(redirectUrl);
-    }
+    userController.logIn
 );
 
 
-router.get("/logout", (req, res, next)=>{
-    req.logout((err)=>{
-        if(err){
-            return next(err);
-        }
-        req.flash("success", "you have properly logged out");
-        res.redirect("/listings");
-    });
-});
+router.get("/logout", userController.logOut);
 
 
 
