@@ -12,20 +12,7 @@ router.get("/signup", userController.renderSingupForm);
 
 router.post(
     "/signup",
-    wrapAsync(async (req, res) => {
-        let { username, email, password } = req.body;
-        const newUser = new User({ email, username });
-        const registeredUser = await User.register(newUser, password);
-        // console.log(registeredUser);
-        req.login(registeredUser, (err)=>{
-            if(err){
-                return next(err);
-            }
-        req.flash("success", "User was registered successfully!");
-        res.redirect(req.session.redirectUrl);
-        });
-        
-    })
+    wrapAsync(userController.SignUp)
 );
 
 
