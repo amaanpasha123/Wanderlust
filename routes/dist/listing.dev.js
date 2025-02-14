@@ -22,8 +22,13 @@ var _require3 = require("../middleware.js"),
 
 var listingController = require("../controllers/listing.js");
 
-var mongoose = require("mongoose"); // Validation middleware
+var mongoose = require("mongoose");
 
+var multer = require('multer');
+
+var upload = multer({
+  dest: 'uploads/'
+}); // Validation middleware
 
 var validateListing = function validateListing(req, res, next) {
   var _listingSchema$valida = listingSchema.validate(req.body),
@@ -45,8 +50,15 @@ router.get("/", wrapAsync(listingController.index)); // New Listing Form
 router.get("/new", isLoggedIn, listingController.renderNewForm); //Show route of listings.........
 
 router.get("/:id", wrapAsync(listingController.showListing)); // Create New Listing
+// router.post(
+//     "/",
+//     validateListing,
+//     wrapAsync(listingController.createListing)
+// );
 
-router.post("/", validateListing, wrapAsync(listingController.createListing)); // Edit Listing Form .. it only renders the form of updation of listing
+router.post("/", upload.single('listing[image]'), function (req, res) {
+  res.send(req.file);
+}); // Edit Listing Form .. it only renders the form of updation of listing
 
 router.get("/:id/edit", isLoggedIn, wrapAsync(listingController.editExistingListing)); // Update Listing Actuall editing done in databases
 

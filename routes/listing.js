@@ -8,6 +8,8 @@ const {isLoggedIn} = require("../middleware.js");
 const {ownerCheck} = require("../middleware.js");
 const listingController = require("../controllers/listing.js");
 const mongoose = require("mongoose");
+const multer  = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 // Validation middleware
 const validateListing = (req, res, next) => {
@@ -40,11 +42,15 @@ router.get(
 
 
 // Create New Listing
-router.post(
-    "/",
-    validateListing,
-    wrapAsync(listingController.createListing)
-);
+// router.post(
+//     "/",
+//     validateListing,
+//     wrapAsync(listingController.createListing)
+// );
+router.post("/", upload.single('listing[image]'), (req, res)=>{
+    res.send(req.file);
+});
+
 
 
 // Edit Listing Form .. it only renders the form of updation of listing
