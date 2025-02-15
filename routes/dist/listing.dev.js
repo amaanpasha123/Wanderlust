@@ -1,5 +1,9 @@
 "use strict";
 
+require('dotenv').config();
+
+console.log(process.env.SECRET);
+
 var express = require("express");
 
 var router = express.Router(); // Fixed: Add parentheses to invoke Router

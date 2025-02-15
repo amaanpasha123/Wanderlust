@@ -1,3 +1,6 @@
+require('dotenv').config();
+console.log(process.env.SECRET);
+
 const express = require("express");
 const router = express.Router(); // Fixed: Add parentheses to invoke Router
 const wrapAsync = require("../utils/wrapAsyc.js");
@@ -7,7 +10,7 @@ const Listing = require("../models/listing");
 const {isLoggedIn} = require("../middleware.js");
 const {ownerCheck} = require("../middleware.js");
 const listingController = require("../controllers/listing.js");
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); 
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
