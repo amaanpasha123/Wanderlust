@@ -16,7 +16,9 @@ const {ownerCheck} = require("../middleware.js");
 const listingController = require("../controllers/listing.js");
 const mongoose = require("mongoose"); 
 const multer  = require('multer');
-const upload = multer({ dest: 'uploads/' });
+
+const {storage} = require("../cloudconfig.js");
+const upload = multer({ storage });//multer will save this in cloud storage directly.
 
 // Validation middleware
 const validateListing = (req, res, next) => {
@@ -49,14 +51,18 @@ router.get(
 
 
 // Create New Listing
-// router.post(
-//     "/",
-//     validateListing,
-//     wrapAsync(listingController.createListing)
-// );
-router.post("/", upload.single('listing[image]'), (req, res)=>{
-    res.send(req.file);
-});
+router.post(
+    "/",
+    isLoggedIn,
+    upload.single("listing[image]"),
+    validateListing,
+    wrapAsync(listingController.createListing)
+);
+
+
+// router.post("/", upload.single('listing[image]'), (req, res)=>{
+//     res.send(req.file);
+// });
 
 
 

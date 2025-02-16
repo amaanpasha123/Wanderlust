@@ -10,3 +10,15 @@ cloudinary.config({
   api_key: process.env.CLOUD_API_KEY,
   api_secret: process.env.CLOUD_API_SECRET
 });
+var storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'wanderlust-dev',
+    allowedFormats: ['png', 'jpg', 'jpeg'] // supports promises as well
+
+  }
+});
+module.exports = {
+  cloudinary: cloudinary,
+  storage: storage
+};

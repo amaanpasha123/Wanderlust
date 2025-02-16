@@ -84,21 +84,28 @@ module.exports.showListing = function _callee2(req, res) {
 
 
 module.exports.createListing = function _callee3(req, res) {
-  var newListing;
+  var url, filename, newListing;
   return regeneratorRuntime.async(function _callee3$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
+          url = req.file.path;
+          filename = req.file.filename;
+          console.log(url, "..", filename);
           newListing = new Listing(req.body.listing);
           newListing.owner = req.user._id;
-          _context3.next = 4;
+          newListing.image = {
+            url: url,
+            filename: filename
+          };
+          _context3.next = 8;
           return regeneratorRuntime.awrap(newListing.save());
 
-        case 4:
+        case 8:
           req.flash("success", "Congratulations you created a new listings");
           res.redirect("/listings");
 
-        case 6:
+        case 10:
         case "end":
           return _context3.stop();
       }
