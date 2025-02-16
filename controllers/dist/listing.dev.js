@@ -167,20 +167,26 @@ module.exports.updationOfListing = function _callee5(req, res) {
 
         case 6:
           updatedListing = _context5.sent;
+
+          if (!(typeof req.file !== "undefined")) {
+            _context5.next = 13;
+            break;
+          }
+
           url = req.file.path;
           filename = req.file.filename;
           updatedListing.image = {
             url: url,
             filename: filename
           };
-          _context5.next = 12;
+          _context5.next = 13;
           return regeneratorRuntime.awrap(updatedListing.save());
 
-        case 12:
+        case 13:
           req.flash("success", "Your listing has been updated!");
           res.redirect("/listings/".concat(id));
 
-        case 14:
+        case 15:
         case "end":
           return _context5.stop();
       }
