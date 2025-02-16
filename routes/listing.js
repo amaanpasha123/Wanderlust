@@ -78,6 +78,7 @@ router.put(
     "/:id",
     isLoggedIn,
     ownerCheck,
+    upload.single("listing[image]"),
     validateListing,
     wrapAsync(listingController.updationOfListing)
 );

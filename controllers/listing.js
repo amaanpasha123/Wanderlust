@@ -70,6 +70,10 @@ module.exports.updationOfListing = async (req, res) => {
         req.body.listing,
         { new: true, runValidators: true }
     );
+    let url = req.file.path;
+    let filename = req.file.filename;
+    updatedListing.image = {url, filename};
+    await updatedListing.save();
 
     req.flash("success", "Your listing has been updated!");
     res.redirect(`/listings/${id}`);

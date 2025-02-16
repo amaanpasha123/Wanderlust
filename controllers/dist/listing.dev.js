@@ -148,7 +148,7 @@ module.exports.editExistingListing = function _callee4(req, res) {
 
 
 module.exports.updationOfListing = function _callee5(req, res) {
-  var id, listing, updatedListing;
+  var id, listing, updatedListing, url, filename;
   return regeneratorRuntime.async(function _callee5$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
@@ -167,10 +167,20 @@ module.exports.updationOfListing = function _callee5(req, res) {
 
         case 6:
           updatedListing = _context5.sent;
+          url = req.file.path;
+          filename = req.file.filename;
+          updatedListing.image = {
+            url: url,
+            filename: filename
+          };
+          _context5.next = 12;
+          return regeneratorRuntime.awrap(updatedListing.save());
+
+        case 12:
           req.flash("success", "Your listing has been updated!");
           res.redirect("/listings/".concat(id));
 
-        case 9:
+        case 14:
         case "end":
           return _context5.stop();
       }

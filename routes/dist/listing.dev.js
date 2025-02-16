@@ -70,7 +70,7 @@ router.post("/", isLoggedIn, upload.single("listing[image]"), validateListing, w
 
 router.get("/:id/edit", isLoggedIn, wrapAsync(listingController.editExistingListing)); // Update Listing Actuall editing done in databases
 
-router.put("/:id", isLoggedIn, ownerCheck, validateListing, wrapAsync(listingController.updationOfListing)); // Delete Listing
+router.put("/:id", isLoggedIn, ownerCheck, upload.single("listing[image]"), validateListing, wrapAsync(listingController.updationOfListing)); // Delete Listing
 
 router["delete"]("/:id", isLoggedIn, ownerCheck, wrapAsync(listingController.deletionOfListing));
 module.exports = router;
