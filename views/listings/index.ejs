@@ -1,8 +1,45 @@
 <% layout("/layouts/boilerplate") %>
-    <h3>All Listings</h3>
-    <!-- <form method="GET" action="/listings/new">
-        <button>Create New Listing</button>
-    </form> -->
+    
+    <style>
+        #filters{
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .filter{
+            text-align: center;
+            margin-right: 2rem;
+            opacity: .7;
+        }
+        .filter:hover{
+            opacity: 1;
+            cursor: pointer;
+        }
+    </style>
+
+    <div id="filters">
+        <div class="filter">
+            <div><i class="fa-solid fa-fire"></i></div>
+            <p>Trending</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-bed"></i></div>
+            <p>Bed</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-person-swimming"></i></div>
+            <p>Pools</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-umbrella-beach"></i></div>
+            <p>Beach</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-tractor"></i></div>
+            <p>Farm</p>
+        </div>
+    </div>
     <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
         <% for(let listing of allListings) { %>
             <a href="/listings/<%= listing._id %>" class="listing-link">
