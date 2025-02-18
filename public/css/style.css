@@ -119,8 +119,9 @@ footer {
     font-weight: 400 !important;
 }
 
-.card-text p{
+.card-text {
     font-weight: 400 !important;
+    text-decoration: none !important;
 }
 
 

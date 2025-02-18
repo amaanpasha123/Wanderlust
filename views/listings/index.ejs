@@ -16,6 +16,9 @@
             opacity: 1;
             cursor: pointer;
         }
+        #tax-info{
+            display: none;
+        }
     </style>
 
     <div id="filters">
@@ -61,7 +64,7 @@
                     <p class="card-text">
                  <b><%= listing.title %></b> <br />
                     <%= listing.price %> / night
-                    <i>+18% GST</i>
+                    <i id="tax-info">+18% GST</i>
                     </p>
                 </div>
             </div>
