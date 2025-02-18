@@ -61,9 +61,17 @@
                     <p class="card-text">
                  <b><%= listing.title %></b> <br />
                     <%= listing.price %> / night
+                    <i>+18% GST</i>
                     </p>
                 </div>
             </div>
         </a>
             <% } %>    
     </div>
+
+<script>
+    let taxSwitch = document.getElementById("flexSwitchCheckDefault");
+    taxSwitch.addEventListener("click", ()=>{
+        console.log("clicked");
+    });
+</script>
