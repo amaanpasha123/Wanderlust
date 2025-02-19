@@ -1,3 +1,4 @@
+const User = require("../models/user.js");
 
 module.exports.renderSingupForm =  (req, res) => {
     res.render("users/signup");

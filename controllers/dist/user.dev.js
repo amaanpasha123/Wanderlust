@@ -1,5 +1,7 @@
 "use strict";
 
+var User = require("../models/user.js");
+
 module.exports.renderSingupForm = function (req, res) {
   res.render("users/signup");
 };
