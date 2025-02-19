@@ -1,3 +1,18 @@
+<style>
+  .btn{
+    background-color: #fe424d;
+    color: #fff;
+  }
+  .btn:hover{
+    background-color: #fe424d;
+    color: #fff;
+  }
+  .btn i{
+    display: inline;
+  }
+</style>
+
+
 <nav class="navbar navbar-expand-md bg-light border-bottom sticky-top shadow-sm py-2">
   <div class="container-fluid">
     <!-- Brand Logo -->
@@ -6,6 +21,12 @@
       <span class="ms-2 fs-4">Roomify</span>
     </a>
 
+    <div class="navbar-nav ms-auto">
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit"><i class="fa-brands fa-searchengin"></i>  Search</button>
+      </form>
+    </div>
     <!-- Toggler Button -->
     <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -15,11 +36,9 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <!-- Left-aligned Links -->
       <div class="navbar-nav me-auto">
-        <!-- <a class="nav-link text-dark fw-semibold" href="/listings">All Listings</a> -->
-
-      
+        <!-- <a class="nav-link text-dark fw-semibold" href="/listings">All Listings</a> -->      
       </div>
-
+      
       <!-- Right-aligned Links -->
       <div class="navbar-nav">
         <a class="nav-link text-dark fw-semibold" href="/listings/new">Add New Listing</a>
