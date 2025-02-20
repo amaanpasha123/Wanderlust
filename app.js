@@ -21,6 +21,9 @@ const flash = require("connect-flash");//for the purpose of flash messages.....
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");//schema this is
+const dburl = process.env.MONGOURL
+
+
 
 
 
@@ -89,6 +92,8 @@ mongoose
   .catch((err) => {
     console.error("Failed to connect to MongoDB", err);
 });
+  
+
 
 
 

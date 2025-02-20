@@ -46,8 +46,9 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local");
 
 var User = require("./models/user.js"); //schema this is
-// EJS engine setup
 
+
+var dburl = process.env.MONGOURL; // EJS engine setup
 
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
